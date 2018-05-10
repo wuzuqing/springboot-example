@@ -22,6 +22,7 @@ mvnw.cmd
 ### NetBeans ###
 nbproject/private/
 build/
+out/
 nbbuild/
 dist/
 nbdist/

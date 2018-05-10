@@ -13,6 +13,10 @@ package com.neeson.example.dto;
 
 import lombok.Data;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -22,10 +26,13 @@ import lombok.Data;
  * @since 1.0.0
  */
 
+@Entity
 @Data
 public class FriendDTO {
 
+    @Id
+    @GeneratedValue
+    private Integer id;
     private Integer userId;
-    private String userName;
-    private String userImg;
+    private Integer friendId;
 }

@@ -11,7 +11,7 @@
 
 package com.neeson.example.im;
 
-import com.neeson.example.dto.FriendDTO;
+import com.neeson.example.dto.UserDTO;
 
 import java.util.List;
 
@@ -25,5 +25,7 @@ import java.util.List;
  */
 public interface IMService {
 
-    List<FriendDTO> getFriendList(String id);
+    List<UserDTO> getFriendList(String id);
+
+    UserDTO getUser(Integer id);
 }
