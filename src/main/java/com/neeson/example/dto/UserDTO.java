@@ -34,8 +34,17 @@ public class UserDTO {
     @GeneratedValue
     private Integer id;
 
-    @Column(nullable = false)
-    private String userName;
 
-    private String userImg;
+    @Column(nullable = false)
+    private String phone;
+
+    @Column(nullable = false)
+    private String pwd;
+
+    private String userName; //昵称
+    private String userImg; //头像
+    private String address; //地址
+    private String sex;     //性别
+    private String sign;    //签名
+    private String rongToken; //融云token
 }

@@ -1,7 +1,7 @@
 package com.neeson.example.controller;
 
 import com.neeson.example.dto.UserDTO;
-import com.neeson.example.im.IMService;
+import com.neeson.example.service.IFriendService;
 import com.neeson.example.util.response.ResponseResult;
 import com.neeson.example.util.response.RestResultGenerator;
 import io.swagger.annotations.Api;
@@ -29,7 +29,7 @@ import java.util.List;
 public class IMController {
 
     @Autowired
-    private IMService imService;
+    private IFriendService IFriendService;
 
 
 
@@ -38,7 +38,7 @@ public class IMController {
     @GetMapping("/getFriend/{id}")
     public ResponseResult getFriend(@PathVariable String id){
         System.out.print("id:"+id);
-        List<UserDTO> friendList  = imService.getFriendList(id);
+        List<UserDTO> friendList  = IFriendService.getFriendList(id);
         return RestResultGenerator.genResult(friendList,"");
     }
 
@@ -48,23 +48,9 @@ public class IMController {
     @GetMapping("/getGroupList/{id}")
     public ResponseResult getGroupList(@PathVariable String id){
         System.out.print("id:"+id);
-        List<UserDTO> friendList  = imService.getFriendList(id);
+        List<UserDTO> friendList  = IFriendService.getFriendList(id);
         return RestResultGenerator.genResult(friendList,"");
     }
-
-    @ApiOperation("获取用户信息")
-    @ApiImplicitParam (name = "id",value = "用户ID",required = true,paramType = "path",dataType = "Long")
-    @GetMapping("/info/{id}")
-    public ResponseResult getUserInfo(@PathVariable Long id){
-
-        UserDTO user = imService.getUser(Math.toIntExact(id));
-        return RestResultGenerator.genResult(user,"");
-    }
-
-
-
-
-
 
 
 }
