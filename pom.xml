@@ -133,12 +133,7 @@
             <version>2.9.0</version>
         </dependency>
 
-        <!-- 短信 -->
-        <dependency>
-            <groupId>com.aliyun</groupId>
-            <artifactId>aliyun-java-sdk-core</artifactId>
-            <version>3.5.0</version>
-        </dependency>
+
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
@@ -188,7 +183,6 @@
             <artifactId>xstream</artifactId>
             <version>1.4.9</version>
         </dependency>
-
 
 
     </dependencies>

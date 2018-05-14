@@ -14,6 +14,8 @@ package com.neeson.example.repository;
 import com.neeson.example.dto.FriendDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -22,8 +24,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @create 2018/5/10
  * @since 1.0.0
  */
-public interface FriendRepository  extends JpaRepository<FriendDTO, Long> {
+public interface FriendRepository  extends JpaRepository<FriendDTO, Integer> {
+
+    FriendDTO findByUserIdAndFriendId(Integer userId,Integer friend);
+
+    List<FriendDTO> findByUserIdOrFriendId(Integer userId,Integer id1);
 
 
 
+
+    //@Query("select u from UserDTO u where u.id in select  f.friendId  from FriendDTO f where f.userId = ? or f.friendId = ?")
+    ////@Query("select  f.friendId  from FriendDTO f where f.userId = ?1 or f.friendId = ?2")
+    //List<Integer> findByUserId(Integer userId1, Integer userId2);
 }

@@ -25,14 +25,26 @@ public class UserController {
     private UserServiceImpl userService;
 
 
-    //@ApiOperation("获取用户信息")
-    //@ApiImplicitParam(name = "id", value = "用户ID", required = true, paramType = "path", dataType = "Long")
-    //@GetMapping("/info/{id}")
+
     @ApiOperation(value = "获取用户信息", produces = "application/json")
     @RequestMapping(value = "/info/{id}", method = RequestMethod.GET)
     public ResponseResult getUserInfo(@ApiParam(value = "用户ID", required = true) @PathVariable Long id) {
         UserDTO user = userService.getUser(Math.toIntExact(id));
         return RestResultGenerator.genResult(user, "获取成功");
+    }
+
+
+    @ApiOperation(value = "搜索用户", produces = "application/json")
+    @RequestMapping(value = "/search/{phone}", method = RequestMethod.GET)
+    public ResponseResult searchUser(@ApiParam(value = "用户名", required = true) @PathVariable String phone)
+                                   {
+        UserDTO user = userService.searchUser(phone);
+        if (user == null) {
+            return RestResultGenerator.genErrorResult("没有此用户,请重新输入");
+        } else {
+            return RestResultGenerator.genResult(user, "搜索成功");
+        }
+
     }
 
 
@@ -57,7 +69,12 @@ public class UserController {
         if (user == null) {
             return RestResultGenerator.genErrorResult("登录失败,该手机号尚未注册");
         } else {
-            return RestResultGenerator.genResult(user, "登录成功");
+            if (user.getPwd().equals(pwd)){
+                return RestResultGenerator.genResult(user, "登录成功");
+            }else{
+                return RestResultGenerator.genErrorResult(  "密码错误");
+            }
+
         }
     }
 

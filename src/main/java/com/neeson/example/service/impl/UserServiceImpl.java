@@ -1,6 +1,6 @@
 /**
  * Copyright (C), 2015-2018, XXX有限公司
- * FileName: IFriendServiceImpl
+ * FileName: FriendServiceImpl
  * Author:   ChiMon
  * Date:     2018/5/9 11:44
  * Description:
@@ -15,7 +15,6 @@ import com.neeson.example.dto.UserDTO;
 import com.neeson.example.repository.UserRepository;
 import com.neeson.example.service.IUserService;
 import io.rong.RongCloud;
-import io.rong.methods.user.User;
 import io.rong.models.response.TokenResult;
 import io.rong.models.user.UserModel;
 import lombok.extern.slf4j.Slf4j;
@@ -38,16 +37,19 @@ import java.util.Optional;
 public class UserServiceImpl implements IUserService {
 
 
-
     @Autowired
     UserRepository mUserRepository;
 
     @Override
     public UserDTO getUser(Integer id) {
-        System.out.println("id:" + id);
         Optional<UserDTO> userDTO = mUserRepository.findById(id);
         if (userDTO.isPresent()) return userDTO.get();
         return new UserDTO();
+    }
+
+    @Override
+    public UserDTO searchUser(String phone) {
+        return mUserRepository.findByPhone(phone);
     }
 
     @Override
@@ -75,8 +77,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public UserDTO login(String phone, String pwd) {
-        UserDTO userDTO = mUserRepository.findByPhoneAndPwd(phone, pwd);
-        return userDTO;
+        return  mUserRepository.findByPhone(phone);
     }
 
     @Override

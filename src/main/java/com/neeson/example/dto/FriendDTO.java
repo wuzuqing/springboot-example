@@ -20,7 +20,7 @@ import javax.persistence.Id;
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
- *
+ *goii
  * @author ChiMon
  * @create 2018/5/9
  * @since 1.0.0
@@ -35,4 +35,8 @@ public class FriendDTO {
     private Integer id;
     private Integer userId;
     private Integer friendId;
+
+    private Integer flag;// 为1 表示同意对方添加好友
+    
+
 }

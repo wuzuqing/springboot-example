@@ -32,7 +32,7 @@ public class UserDTO {
 
     @Id
     @GeneratedValue
-    private Integer id;
+        private Integer id;
 
 
     @Column(nullable = false)
