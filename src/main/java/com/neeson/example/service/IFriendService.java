@@ -11,8 +11,9 @@
 
 package com.neeson.example.service;
 
-import com.neeson.example.dto.FriendDTO;
-import com.neeson.example.dto.UserDTO;
+import com.neeson.example.entity.FriendDto;
+import com.neeson.example.entity.TempFriendDto;
+import com.neeson.example.entity.UserDto;
 
 import java.util.List;
 
@@ -26,7 +27,11 @@ import java.util.List;
  */
 public interface IFriendService {
 
-    List<UserDTO> getFriendList(Integer userId);
+    List<UserDto> getFriendList(Integer userId);
 
-    FriendDTO addFriend(Integer userId, Integer friendId);
+    TempFriendDto addFriend(Integer userId, Integer friendId);
+
+    FriendDto deleteFriend(Integer userId, Integer friendId);
+
+    FriendDto reAddFriend(Integer userId, Integer friendId,Integer state);
 }

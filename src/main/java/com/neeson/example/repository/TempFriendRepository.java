@@ -11,10 +11,8 @@
 
 package com.neeson.example.repository;
 
-import com.neeson.example.entity.FriendDto;
+import com.neeson.example.entity.TempFriendDto;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -24,15 +22,11 @@ import java.util.List;
  * @create 2018/5/10
  * @since 1.0.0
  */
-public interface FriendRepository  extends JpaRepository<FriendDto, Integer> {
+public interface TempFriendRepository extends JpaRepository<TempFriendDto, Integer> {
 
-    FriendDto findByUserIdAndFriendId(Integer userId, Integer friend);
+    TempFriendDto findByUserIdAndFriendId(Integer userId, Integer friend);
 
-    List<FriendDto> findByUserIdOrFriendId(Integer userId, Integer id1);
-
-
-
-
+    TempFriendDto findByUserIdAndGroupId(Integer userId, Integer groupId);
     //@Query("select u from UserDTO u where u.id in select  f.friendId  from FriendDTO f where f.userId = ? or f.friendId = ?")
     ////@Query("select  f.friendId  from FriendDTO f where f.userId = ?1 or f.friendId = ?2")
     //List<Integer> findByUserId(Integer userId1, Integer userId2);

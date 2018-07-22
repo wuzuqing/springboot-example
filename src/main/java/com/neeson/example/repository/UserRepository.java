@@ -11,7 +11,7 @@
 
 package com.neeson.example.repository;
 
-import com.neeson.example.dto.UserDTO;
+import com.neeson.example.entity.UserDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -27,27 +27,27 @@ import java.util.List;
  * @create 2018/5/10
  * @since 1.0.0
  */
-public interface UserRepository extends JpaRepository<UserDTO, Integer>, JpaSpecificationExecutor<UserDTO> {
+public interface UserRepository extends JpaRepository<UserDto, Integer>, JpaSpecificationExecutor<UserDto> {
 
-     UserDTO findByPhone(String phone);
-
-     UserDTO findByPhoneAndPwd(String phone, String pwd);
+     UserDto findByAccountOrPhone(String account,String phone);
+     UserDto findByAccount(String account);
+     UserDto findByAccountAndPassword(String account, String password);
 
 
      //@Modifying
-     //@Query("update User u set u.userName = ?1 where c.id = ?2")
+     //@Query("update UserDto u set u.userName = ?1 where c.id = ?2")
      //int modifyByIdAndUserId(String  userName, Long id);
      //
      //@Transactional
      //@Modifying
-     //@Query("delete from User where id = ?1")
+     //@Query("delete from UserDto where id = ?1")
      //void deleteByUserId(Long id);
      //
      //@Transactional(timeout = 10)
-     //@Query("select u from User u where u.emailAddress = ?1")
-     //User findByEmailAddress(String emailAddress);
+     //@Query("select u from UserDto u where u.emailAddress = ?1")
+     //UserDto findByEmailAddress(String emailAddress);
 
 
-     @Query(value = "select * from UserDTO u where u.id in (:spIds)", nativeQuery = true)
-     List<UserDTO> findById(@Param("spIds") List<Integer> spIds);
+     @Query(value = "select * from user u where u.id in (:spIds)", nativeQuery = true)
+     List<UserDto> findById(@Param("spIds") List<Integer> spIds);
 }

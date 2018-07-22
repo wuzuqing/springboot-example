@@ -11,14 +11,13 @@
 
 package com.neeson.example.service.impl;
 
-import com.neeson.example.dto.FriendDTO;
-import com.neeson.example.dto.UserDTO;
+import com.neeson.example.entity.FriendDto;
+import com.neeson.example.entity.TempFriendDto;
+import com.neeson.example.entity.UserDto;
 import com.neeson.example.repository.FriendRepository;
+import com.neeson.example.repository.TempFriendRepository;
 import com.neeson.example.repository.UserRepository;
 import com.neeson.example.service.IFriendService;
-import io.rong.RongCloud;
-import io.rong.messages.TxtMessage;
-import io.rong.models.message.SystemMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,86 +42,101 @@ public class FriendServiceImpl implements IFriendService {
 
 
     @Autowired
+    private TempFriendRepository tempFriendRepository;
+    @Autowired
     private FriendRepository friendRepository;
     @Autowired
     private UserRepository userRepository;
 
     @Override
-    public List<UserDTO> getFriendList(Integer id) {
-        List<FriendDTO> friendDTOS1 = friendRepository.findByUserIdOrFriendId(id, id);
-        if (friendDTOS1 == null || friendDTOS1.isEmpty()) {
+    public List<UserDto> getFriendList(Integer id) {
+        List<FriendDto> friendDtoDTOS1 = friendRepository.findByUserIdOrFriendId(id, id);
+        if (friendDtoDTOS1 == null || friendDtoDTOS1.isEmpty()) {
             return null;
         }
         List<Integer> ids = new ArrayList<>();
-        for (FriendDTO friendDTO : friendDTOS1) {
-            if (friendDTO.getFlag() == 0) continue;//还没同意
-            if (friendDTO.getFriendId() == id) {
-                ids.add(friendDTO.getUserId());
+        for (FriendDto friendDTO : friendDtoDTOS1) {
+            //双方都删除对方了,则都不返回
+            if (friendDTO.getDeleteSum() == (friendDTO.getUserId() + friendDTO.getFriendId())) {
+                continue;
+            } else if (friendDTO.getUserId() == id) {
+                if (friendDTO.getDeleteSum() != friendDTO.getFriendId()) {
+                    ids.add(friendDTO.getFriendId());
+                }
             } else {
-                ids.add(friendDTO.getFriendId());
+                if (friendDTO.getDeleteSum() != friendDTO.getUserId()) {
+                    ids.add(friendDTO.getUserId());
+                }
             }
+        }
+        if (ids.isEmpty()){
+            return null;
         }
         return userRepository.findById(ids);
     }
 
     @Override
-    public FriendDTO addFriend(Integer userId, Integer friendId) { //userId 小,friendId 大
-        boolean isSwap = false;
-        if (userId > friendId) {
-            int temp = userId;
-            userId = friendId;
-            friendId = temp;
-            isSwap = true;
+    public TempFriendDto addFriend(Integer userId, Integer friendId) { //userId 小,friendId 大
+        Optional<UserDto> userDto = userRepository.findById(friendId);
+        if (userDto.get() == null) {
+            return null;
         }
-        FriendDTO friendDTO = friendRepository.findByUserIdAndFriendId(userId, friendId);
-        if (friendDTO == null) {            //第一次添加好友
-            friendDTO = new FriendDTO();
-            friendDTO.setUserId(userId);
-            friendDTO.setFlag(0);
-            friendDTO.setFriendId(friendId);
-            friendRepository.save(friendDTO);
-            //发通知给添加的人
-            if (isSwap) {
-                sendSystemMessage(friendId, userId, 0);
-            } else {
-                sendSystemMessage(userId, friendId, 0);
-            }
-
-        } else {      //同意对方添加好友
-            if (friendDTO.getFlag() == 0){
-                friendDTO.setFlag(1);
-                friendRepository.save(friendDTO);
-                //发通知给
-                if (isSwap) {
-                    sendSystemMessage(friendId, userId, 1);
-                } else {
-                    sendSystemMessage(userId, friendId, 1);
-                }
-            }
-
-
+        TempFriendDto friendDtoDTO = tempFriendRepository.findByUserIdAndFriendId(userId, friendId);
+        if (friendDtoDTO == null) {
+            friendDtoDTO = new TempFriendDto();
+            friendDtoDTO.setUserId(userId);
+            friendDtoDTO.setFriendId(friendId);
+            tempFriendRepository.save(friendDtoDTO);
         }
-        return friendDTO;
+        return friendDtoDTO;
     }
 
-    private void sendSystemMessage(Integer userId, Integer friendId, int flag) {
-        SystemMessage messageModel = new SystemMessage();
-        try {
-            Optional<UserDTO> userDTO = userRepository.findById(userId);
-            String name = "";
-            if (userDTO.isPresent()) {
-                name = userDTO.get().getUserName();
-            }
-            TxtMessage txtMessage = new TxtMessage(name + "将你添加为好友,现在可以开始聊天了", String.valueOf(flag));
-            messageModel.setSenderId(String.valueOf(userId));
-            messageModel.setTargetId(new String[]{String.valueOf(friendId)});
-            messageModel.setContent(txtMessage);
-            messageModel.setObjectName(txtMessage.getType());
-            RongCloud.getInstance().message.system.send(messageModel);
+    @Override
+    public FriendDto deleteFriend(Integer userId, Integer friendId) {
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        int deleteId = friendId;
+        int tempId = 0;
+        if (userId > friendId) {
+            tempId = userId;
+            userId = friendId;
+            friendId = tempId;
         }
+        FriendDto friendDto = friendRepository.findByUserIdAndFriendId(userId, friendId);
+        if (friendDto.getDeleteSum() == null) {
+            friendDto.setDeleteSum(deleteId);
+            friendRepository.save(friendDto);
+        } else {
+            friendRepository.delete(friendDto);
+        }
+
+        return friendDto;
+    }
+
+    @Override
+    public FriendDto reAddFriend(Integer userId, Integer friendId, Integer state) {
+        TempFriendDto tempFriendDto = tempFriendRepository.findByUserIdAndFriendId(userId, friendId);
+        if (tempFriendDto == null) return null;
+        switch (state) {
+            case 1: //同意
+                FriendDto friendDto = new FriendDto();
+                int temp;
+                if (userId > friendId) {
+                    temp = userId;
+                    userId = friendId;
+                    friendId = temp;
+                }
+                friendDto.setUserId(userId);
+                friendDto.setFriendId(friendId);
+                friendDto.setState(1);
+                friendRepository.save(friendDto);
+                tempFriendRepository.delete(tempFriendDto);
+                return friendDto;
+            case -1: //拒绝
+                tempFriendDto.setState(-1);
+                tempFriendRepository.saveAndFlush(tempFriendDto);
+                return null;
+        }
+        return null;
     }
 
 }
