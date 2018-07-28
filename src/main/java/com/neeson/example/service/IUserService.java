@@ -11,7 +11,7 @@
 
 package com.neeson.example.service;
 
-import com.neeson.example.entity.UserDto;
+import com.neeson.example.util.response.ResponseResult;
 
 /**
  * 〈一句话功能简述〉<br>
@@ -24,15 +24,14 @@ import com.neeson.example.entity.UserDto;
 public interface IUserService {
 
 
-    UserDto getUser(Integer id);
+    ResponseResult getUserInfoByToken(String  token);
 
-    UserDto searchUser(String phone);
+    ResponseResult getUser(Integer id);
 
-    UserDto register(String phone, String pwd);
+    ResponseResult searchUser(String phone);
 
-    UserDto login(String phone, String pwd);
+    ResponseResult register(String phone, String pwd);
 
-    String refreshRondToken(Integer id);
-
+    ResponseResult login(String phone, String pwd);
 
 }

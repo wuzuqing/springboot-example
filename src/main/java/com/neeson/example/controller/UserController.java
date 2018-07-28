@@ -28,20 +28,21 @@ public class UserController {
     @ApiOperation(value = "获取用户信息", produces = "application/json")
     @RequestMapping(value = "/info/{id}", method = RequestMethod.GET)
     public ResponseResult getUserInfo(@ApiParam(value = "用户ID", required = true) @PathVariable Long id) {
-        UserDto userDto = userService.getUser(Math.toIntExact(id));
-        return RestResultGenerator.genResult(userDto, "获取成功");
+        return userService.getUser(Math.toIntExact(id));
+    }
+
+
+    @ApiOperation(value = "获取用户信息", produces = "application/json")
+    @RequestMapping(value = "/getUserInfoByToken/{token}", method = RequestMethod.GET)
+    public ResponseResult getUserInfoByToken(@ApiParam(value = "用户ID", required = true) @PathVariable String token) {
+        return userService.getUserInfoByToken(token );
     }
 
 
     @ApiOperation(value = "搜索用户", produces = "application/json")
     @RequestMapping(value = "/search/{phone}", method = RequestMethod.GET)
     public ResponseResult searchUser(@ApiParam(value = "用户名", required = true) @PathVariable String phone) {
-        UserDto userDto = userService.searchUser(phone);
-        if (userDto == null) {
-            return RestResultGenerator.genErrorResult("没有此用户,请重新输入");
-        } else {
-            return RestResultGenerator.genResult(userDto, "搜索成功");
-        }
+        return userService.searchUser(phone);
     }
 
 
@@ -49,29 +50,14 @@ public class UserController {
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseResult register(@ApiParam(value = "手机号", required = true) @RequestParam String phone,
                                    @ApiParam(value = "密码", required = true) @RequestParam String pwd) {
-        UserDto userDto = userService.register(phone, pwd);
-        if (userDto == null) {
-            return RestResultGenerator.genErrorResult("该手机号已注册,请更换手机号码再试");
-        } else {
-            return RestResultGenerator.genResult(userDto, "注册成功");
-        }
+        return userService.register(phone, pwd);
     }
 
     @ApiOperation(value = "登录", produces = "application/json")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseResult login(@ApiParam(value = "手机号", required = true) @RequestParam String phone,
                                 @ApiParam(value = "密码", required = true) @RequestParam String pwd) {
-        UserDto userDto = userService.login(phone, pwd);
-        if (userDto == null) {
-            return RestResultGenerator.genErrorResult("登录失败,该手机号尚未注册");
-        } else {
-            if (userDto.getPassword().equals(pwd)) {
-                return RestResultGenerator.genResult(userDto, "登录成功");
-            } else {
-                return RestResultGenerator.genErrorResult("密码错误");
-            }
-
-        }
+        return userService.login(phone, pwd);
     }
 
 }

@@ -20,7 +20,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈〉
  *
  * @author ChiMon
@@ -29,25 +29,14 @@ import java.util.List;
  */
 public interface UserRepository extends JpaRepository<UserDto, Integer>, JpaSpecificationExecutor<UserDto> {
 
-     UserDto findByAccountOrPhone(String account,String phone);
-     UserDto findByAccount(String account);
-     UserDto findByAccountAndPassword(String account, String password);
+    UserDto findByAccountOrPhone(String account, String phone);
 
+    UserDto findByAccount(String account);
 
-     //@Modifying
-     //@Query("update UserDto u set u.userName = ?1 where c.id = ?2")
-     //int modifyByIdAndUserId(String  userName, Long id);
-     //
-     //@Transactional
-     //@Modifying
-     //@Query("delete from UserDto where id = ?1")
-     //void deleteByUserId(Long id);
-     //
-     //@Transactional(timeout = 10)
-     //@Query("select u from UserDto u where u.emailAddress = ?1")
-     //UserDto findByEmailAddress(String emailAddress);
+    UserDto findByToken(String token);
 
+    UserDto findByAccountAndPassword(String account, String password);
 
-     @Query(value = "select * from user u where u.id in (:spIds)", nativeQuery = true)
-     List<UserDto> findById(@Param("spIds") List<Integer> spIds);
+    @Query(value = "select * from user u where u.id in (:spIds)", nativeQuery = true)
+    List<UserDto> findById(@Param("spIds") List<Integer> spIds);
 }

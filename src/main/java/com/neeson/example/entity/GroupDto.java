@@ -2,13 +2,17 @@ package com.neeson.example.entity;
 
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.List;
 
 @Entity
+@ToString
 @Data
-@Table(name = "group_dto")
-public class GroupDto {
+@Table(name = "group1")
+public class GroupDto implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -17,43 +21,7 @@ public class GroupDto {
     private String groupNotice;//群公告
     private Integer groupManagerId;
 
-    public Integer getGroupManagerId() {
-        return groupManagerId;
-    }
+    @OneToMany(cascade = CascadeType.ALL,fetch=FetchType.LAZY, mappedBy = "group")
+    private List<GroupMemberDto> groupMemberList ;
 
-    public void setGroupManagerId(Integer groupManagerId) {
-        this.groupManagerId = groupManagerId;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
-
-    public Long getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Long createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getGroupNotice() {
-        return groupNotice;
-    }
-
-    public void setGroupNotice(String groupNotice) {
-        this.groupNotice = groupNotice;
-    }
 }
