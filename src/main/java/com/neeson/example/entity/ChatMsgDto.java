@@ -25,6 +25,11 @@ public class ChatMsgDto implements Comparable<ChatMsgDto> {
     private String url;  //图片-视频 -语音 路径
     @Column(name = "session_id")
     private String sessionId;
+    @Column(name = "duration")
+    private Integer duration;
+    @Column(name = "local_path")
+    private String localPath;
+
     @Override
     public int compareTo(ChatMsgDto o) {
         return (int) (createTime - o.createTime);
