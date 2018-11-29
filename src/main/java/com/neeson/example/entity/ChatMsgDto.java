@@ -10,8 +10,8 @@ import javax.persistence.*;
 public class ChatMsgDto implements Comparable<ChatMsgDto> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column( length = 32,nullable = false)
+    private String id;
     private Integer chatType;
     private String content;
     private Long createTime;
