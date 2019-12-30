@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8"/>
+    <title>图片展示与下载</title>
+
+    <script type="text/javascript" src="/jquery-3.2.1.js"></script>
+
+</head>
+<body>
+    <!--获取到文件名与文件路径-->
+    <div th:each="lm : ${fileNameMap}">
+        <!--<li th:each="entry:${lm}">-->
+        <!--<li th:each="entry:${lm}" th:text="${entry.value}"></li>-->
+        <img alt='暂无图片' th:src="${lm.key}" th:text="${lm.value}" width='180px' onclick="downFile(this)" />
+        <input th:type="button" th:value="删除" />
+
+        <script th:inline="javascript">
+//            var fileName = [[${lm}]];
+//            alert(fileName);
+
+            function downFile(obj) {
+                console.log(obj);//放在里面不管用
+                window.location.href=obj.src;
+            }
+
+        </script>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,1 @@
+这是SpringBoot整合ftl框架 ${name}
