@@ -137,9 +137,9 @@ public class FileController {
     private String getRootDir(){
         boolean isLinux = "Linux".equals(getOSName());
         if (isLinux){
-            return "/usr";
+            return "/usr/local/javaproject/static/jim/";
         }
-        return "f:\\IdeaProjects\\springboot_updownload\\src\\main\\resources\\";
+        return "F:/test/static/jim/";
     }
 
     /**
