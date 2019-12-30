@@ -18,6 +18,8 @@ import com.neeson.example.repository.FriendRepository;
 import com.neeson.example.repository.TempFriendRepository;
 import com.neeson.example.repository.UserRepository;
 import com.neeson.example.service.IFriendService;
+import com.neeson.example.util.response.ResponseResult;
+import com.neeson.example.util.response.RestResultGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.neeson.example.util.ResultUtil.clearGm;
 
 
 /**
@@ -49,7 +53,7 @@ public class FriendServiceImpl implements IFriendService {
     private UserRepository userRepository;
 
     @Override
-    public List<UserDto> getFriendList(Integer id) {
+    public ResponseResult getFriendList(Integer id) {
         List<FriendDto> friendDtoDTOS1 = friendRepository.findByUserIdOrFriendId(id, id);
         if (friendDtoDTOS1 == null || friendDtoDTOS1.isEmpty()) {
             return null;
@@ -57,9 +61,7 @@ public class FriendServiceImpl implements IFriendService {
         List<Integer> ids = new ArrayList<>();
         for (FriendDto friendDTO : friendDtoDTOS1) {
             //双方都删除对方了,则都不返回
-            if (friendDTO.getDeleteSum() == (friendDTO.getUserId() + friendDTO.getFriendId())) {
-                continue;
-            } else if (friendDTO.getUserId() == id) {
+            if (friendDTO.getUserId() == id) {
                 if (friendDTO.getDeleteSum() != friendDTO.getFriendId()) {
                     ids.add(friendDTO.getFriendId());
                 }
@@ -69,14 +71,24 @@ public class FriendServiceImpl implements IFriendService {
                 }
             }
         }
-        if (ids.isEmpty()){
+        if (ids.isEmpty()) {
             return null;
         }
-        return userRepository.findById(ids);
+        List<UserDto> userDtos = userRepository.findById(ids);
+        if (userDtos != null) {
+            for (UserDto userDto : userDtos) {
+                clearGm(userDto);
+            }
+        }
+        if (userDtos == null) {
+            return RestResultGenerator.genErrorResult("您目前好友列表为空");
+        } else {
+            return RestResultGenerator.genResult(userDtos, "");
+        }
     }
 
     @Override
-    public TempFriendDto addFriend(Integer userId, Integer friendId) { //userId 小,friendId 大
+    public ResponseResult addFriend(Integer userId, Integer friendId) { //userId 小,friendId 大
         Optional<UserDto> userDto = userRepository.findById(friendId);
         if (userDto.get() == null) {
             return null;
@@ -88,14 +100,18 @@ public class FriendServiceImpl implements IFriendService {
             friendDtoDTO.setFriendId(friendId);
             tempFriendRepository.save(friendDtoDTO);
         }
-        return friendDtoDTO;
+        if (friendDtoDTO == null) {
+            return RestResultGenerator.genResult(null, "申请添加好友失败,该好友不是有效的用户");
+        } else {
+            return RestResultGenerator.genResult(friendDtoDTO, "申请添加好友成功");
+        }
     }
 
     @Override
-    public FriendDto deleteFriend(Integer userId, Integer friendId) {
+    public ResponseResult deleteFriend(Integer userId, Integer friendId) {
 
         int deleteId = friendId;
-        int tempId = 0;
+        int tempId;
         if (userId > friendId) {
             tempId = userId;
             userId = friendId;
@@ -108,14 +124,17 @@ public class FriendServiceImpl implements IFriendService {
         } else {
             friendRepository.delete(friendDto);
         }
-
-        return friendDto;
+        if (friendDto == null) {
+            return RestResultGenerator.genResult(null, "申请添加好友失败,该好友不是有效的用户");
+        } else {
+            return RestResultGenerator.genResult(friendDto, "申请添加好友成功");
+        }
     }
 
     @Override
-    public FriendDto reAddFriend(Integer userId, Integer friendId, Integer state) {
+    public ResponseResult reAddFriend(Integer userId, Integer friendId, Integer state) {
         TempFriendDto tempFriendDto = tempFriendRepository.findByUserIdAndFriendId(userId, friendId);
-        if (tempFriendDto == null) return null;
+        if (tempFriendDto == null) return RestResultGenerator.genResult(null, "对方拒绝添加好友");
         switch (state) {
             case 1: //同意
                 FriendDto friendDto = new FriendDto();
@@ -129,14 +148,13 @@ public class FriendServiceImpl implements IFriendService {
                 friendDto.setFriendId(friendId);
                 friendDto.setState(1);
                 friendRepository.save(friendDto);
-                tempFriendRepository.delete(tempFriendDto);
-                return friendDto;
+                return RestResultGenerator.genResult(friendDto, "同意添加成功");
             case -1: //拒绝
                 tempFriendDto.setState(-1);
                 tempFriendRepository.saveAndFlush(tempFriendDto);
-                return null;
+                break;
         }
-        return null;
+        return RestResultGenerator.genResult(null, "对方拒绝添加好友");
     }
 
 }

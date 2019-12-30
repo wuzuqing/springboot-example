@@ -11,11 +11,7 @@
 
 package com.neeson.example.service;
 
-import com.neeson.example.entity.FriendDto;
-import com.neeson.example.entity.TempFriendDto;
-import com.neeson.example.entity.UserDto;
-
-import java.util.List;
+import com.neeson.example.util.response.ResponseResult;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -27,11 +23,11 @@ import java.util.List;
  */
 public interface IFriendService {
 
-    List<UserDto> getFriendList(Integer userId);
+    ResponseResult getFriendList(Integer userId);
 
-    TempFriendDto addFriend(Integer userId, Integer friendId);
+    ResponseResult addFriend(Integer userId, Integer friendId);
 
-    FriendDto deleteFriend(Integer userId, Integer friendId);
+    ResponseResult deleteFriend(Integer userId, Integer friendId);
 
-    FriendDto reAddFriend(Integer userId, Integer friendId,Integer state);
+    ResponseResult reAddFriend(Integer userId, Integer friendId,Integer state);
 }

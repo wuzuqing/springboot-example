@@ -11,14 +11,22 @@
 
 package com.neeson.example.service.impl;
 
-import com.neeson.example.entity.UserDto;
+import com.neeson.example.entity.*;
 import com.neeson.example.repository.UserRepository;
 import com.neeson.example.service.IUserService;
+import com.neeson.example.util.RandomValue;
+import com.neeson.example.util.response.ResponseResult;
+import com.neeson.example.util.response.RestResultGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
+import static com.neeson.example.util.ResultUtil.clearGm;
 
 /**
  * 〈一句话功能简述〉<br>
@@ -37,41 +45,150 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     UserRepository mUserRepository;
 
+
+    @Autowired
+    GroupServiceImpl groupService;
+
+    @Autowired
+    FriendServiceImpl friendService;
+
+
     @Override
-    public UserDto getUser(Integer id) {
-        Optional<UserDto> User = mUserRepository.findById(id);
-        if (User.isPresent()) return User.get();
-        return new UserDto();
+    public ResponseResult getUserInfoByToken(String token) {
+        UserDto user = mUserRepository.findByToken(token);
+        if (user == null) {
+            return RestResultGenerator.genResult(null, "获取失败,找不到该用户");
+        }
+        TempUserInfo tempUserInfo = change(user);
+
+        ResponseResult<List<GroupDto>> groupList = groupService.getGroupList(user.getId());
+        List<GroupDto> groupDtos = groupList.getData();
+        if (groupDtos != null) {
+            List<TempGroup> tempGroups = new ArrayList<>();
+            List<TempUserInfo> tempUserInfos;
+            TempGroup group;
+            StringBuffer sb = new StringBuffer();
+            int count;
+            for (GroupDto dto : groupDtos) {
+                group = new TempGroup();
+                group.setId(dto.getId());
+                group.setGroupName(dto.getGroupName());
+                sb.setLength(0);
+                List<GroupMemberDto> list = dto.getGroupMemberList();
+                tempUserInfos = new ArrayList<>();
+                count = 0;
+                for (GroupMemberDto memberDto : list) {
+                    TempUserInfo info = change(memberDto.getUser());
+                    tempUserInfos.add(info);
+                    if (count < 9) {
+                        sb.append(",").append(info.getAvatar());
+                        count++;
+                    }
+                }
+                if (count > 0) {
+                    sb.deleteCharAt(0);
+                    group.setAvatar(sb.toString());
+                }
+                group.setUsers(tempUserInfos);
+                tempGroups.add(group);
+            }
+            tempUserInfo.setGroups(tempGroups);
+        }
+        ResponseResult<List<UserDto>> friendList = friendService.getFriendList(user.getId());
+        List<TempGroup> friends = new ArrayList<>();
+        TempGroup myFriend = new TempGroup(1, "我的好友");
+        if (friendList != null) {
+            List<UserDto> data = friendList.getData();
+            List<TempUserInfo> tempUserInfos = new ArrayList<>();
+            for (UserDto datum : data) {
+                tempUserInfos.add(change(datum));
+            }
+            myFriend.setUsers(tempUserInfos);
+        }
+        friends.add(myFriend);
+        tempUserInfo.setFriends(friends);
+        return RestResultGenerator.genResult(tempUserInfo, "获取成功");
+    }
+
+    private TempUserInfo change(UserDto user) {
+        TempUserInfo tempUserInfo = new TempUserInfo();
+        tempUserInfo.setAvatar(user.getAvatar());
+        tempUserInfo.setId(user.getId());
+        tempUserInfo.setNick(user.getNick());
+        tempUserInfo.setSign(user.getSign());
+        tempUserInfo.setTerminal(user.getTerminal());
+        tempUserInfo.setStatus(user.getStatus());
+        tempUserInfo.setToken(user.getToken());
+        return tempUserInfo;
     }
 
     @Override
-    public UserDto searchUser(String phone) {
-        return mUserRepository.findByAccountOrPhone(phone,phone);
+    public ResponseResult getUser(Integer id) {
+        Optional<UserDto> userDto = mUserRepository.findById(id);
+        if (userDto.isPresent()) {
+            clearGm(userDto.get());
+            return RestResultGenerator.genResult(userDto.get(), "获取成功");
+        } else {
+            return RestResultGenerator.genResult(null, "获取失败,找不到该用户");
+        }
+
     }
-    private String avatar="https://timgsa.baidu" +
-            ".com/timg?image&quality=80&size=b9999_10000&sec=1532196265038&di=ebeb0b2f52342d1933738a12adaf0adb&imgtype=0&src=http%3A%2F%2Fimg10.360buyimg.com%2Fimgzone%2Fjfs%2Ft2077%2F249%2F2855394388%2F434290%2Fdae5739d%2F56f4af8eN29dfc2e5.jpg";
+
     @Override
-    public UserDto register(String phone, String pwd) {
-        if (mUserRepository.findByAccount(phone)!=null){
+    public ResponseResult searchUser(String phone) {
+        UserDto userDto = mUserRepository.findByAccountOrPhone(phone, phone);
+        clearGm(userDto);
+        if (userDto == null) {
+            return RestResultGenerator.genErrorResult("没有此用户,请重新输入");
+        } else {
+            return RestResultGenerator.genResult(userDto, "搜索成功");
+        }
+    }
+
+
+    @Override
+    public ResponseResult register(String phone, String pwd) {
+        if (mUserRepository.findByAccount(phone) != null) {
             return null;
         }
         UserDto userDto = new UserDto();
         userDto.setAccount(phone);
         userDto.setPassword(pwd);
-        userDto.setAvatar(avatar);
-        userDto.setSex("男");
+        userDto.setAvatar(RandomValue.getAvatar());
+        userDto.setNick(RandomValue.getChineseName());
+        userDto.setSex(RandomValue.getSex());
+        userDto.setToken(getToken());
         mUserRepository.save(userDto);
-        return userDto;
+        if (userDto == null) {
+            return RestResultGenerator.genErrorResult("该手机号已注册,请更换手机号码再试");
+        } else {
+            return RestResultGenerator.genResult(userDto, "注册成功");
+        }
+    }
+
+    /**
+     * 生成token
+     *
+     * @return
+     */
+    public static String getToken() {
+        return UUID.randomUUID().toString().replace("-", "");
     }
 
     @Override
-    public UserDto login(String phone, String pwd) {
-        return  mUserRepository.findByAccountOrPhone(phone,phone);
-    }
-
-    @Override
-    public String refreshRondToken(Integer id) {
-
-        return null;
+    public ResponseResult login(String phone, String pwd) {
+        UserDto userDto = mUserRepository.findByAccountOrPhone(phone, phone);
+        if (userDto == null) {
+            return RestResultGenerator.genErrorResult("登录失败,该手机号尚未注册");
+        } else {
+            if (userDto.getPassword().equals(pwd)) {
+                userDto.setToken(getToken());
+                mUserRepository.save(userDto);
+                clearGm(userDto);
+                return RestResultGenerator.genResult(userDto, "登录成功");
+            } else {
+                return RestResultGenerator.genErrorResult("密码错误");
+            }
+        }
     }
 }

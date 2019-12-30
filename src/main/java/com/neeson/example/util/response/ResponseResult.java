@@ -1,11 +1,13 @@
 package com.neeson.example.util.response;
 
 import lombok.Data;
+import lombok.ToString;
 
 
 /**
  * @author MyPC
  */
+@ToString
 @Data
 public class ResponseResult<T> {
 
@@ -22,5 +24,7 @@ public class ResponseResult<T> {
     public void setErrorInfo(ResponseErrorEnum responseErrorEnum) {
         this.message = responseErrorEnum.getMessage();
     }
+
+
 
 }

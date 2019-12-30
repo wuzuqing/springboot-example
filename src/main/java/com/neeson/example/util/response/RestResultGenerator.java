@@ -1,7 +1,6 @@
 package com.neeson.example.util.response;
 
 
-import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -10,8 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RestResultGenerator {
 
-    private static Gson gson = new Gson();
-
+//    private static Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd") .registerTypeAdapterFactory( HibernateProxyTypeAdapter.FACTORY).create() ;
+//    private static Gson gson  =  new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     /**
      * 生成响应成功的(不带正文)的结果
      * @param message
@@ -38,10 +37,15 @@ public class RestResultGenerator {
         responseResult.setCode(0);
         responseResult.setMessage(message);
         responseResult.setData(data);
-        if (log.isDebugEnabled()){
-            log.debug("------> result:{}",gson.toJson(responseResult));
-        }
+
+        logResult(responseResult);
         return responseResult;
+    }
+
+    private static <T> void logResult(ResponseResult<T> responseResult) {
+        if (log.isDebugEnabled()){
+            log.debug("------> result:{}",responseResult);
+        }
     }
 
     /**
@@ -53,9 +57,7 @@ public class RestResultGenerator {
         ResponseResult responseResult = ResponseResult.newInstance();
         responseResult.setCode(-100);
         responseResult.setErrorInfo(errorEnum);
-        if (log.isDebugEnabled()){
-            log.debug("------> result:{}",gson.toJson(responseResult));
-        }
+        logResult(responseResult);
         return responseResult;
     }
 
@@ -63,10 +65,7 @@ public class RestResultGenerator {
         ResponseResult result = ResponseResult.newInstance();
         result.setCode(-100);
         result.setMessage(message);
-
-        if (log.isDebugEnabled()) {
-            log.debug("--------> result:{}", gson.toJson(result));
-        }
+        logResult(result);
 
         return result;
     }
@@ -76,9 +75,7 @@ public class RestResultGenerator {
         result.setCode(-100);
         result.setMessage(message);
         result.setData(data);
-        if (log.isDebugEnabled()) {
-            log.debug("--------> result:{}", gson.toJson(result));
-        }
+        logResult(result);
 
         return result;
     }

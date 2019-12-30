@@ -21,16 +21,6 @@ import com.neeson.example.util.response.ResponseResult;
  * @create 2018/5/9
  * @since 1.0.0
  */
-public interface IGroupService {
-
-
-    ResponseResult createGroup(Integer userId, String groupName);
-
-    ResponseResult invitationUserToGroup(Integer groupId, Integer userId);
-
-    ResponseResult jumpToGroup(Integer groupId, Integer userId, Integer status);
-
-    ResponseResult getGroupList(Integer userId);
-
-    ResponseResult getGroupMemberList(Integer groupId, Integer userId);
+public interface IMessageService {
+    ResponseResult getOffLineMsg(String userId, Long lastTime);
 }

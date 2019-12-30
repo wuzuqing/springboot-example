@@ -11,6 +11,7 @@ import java.util.List;
 public interface GroupRepository extends JpaRepository<GroupDto, Integer> {
 
 
-    @Query(value = "select * from group_dto u where u.id in (:spIds)", nativeQuery = true)
-    List<GroupDto> findById(@Param("spIds") List<Integer> spIds);
+
+    @Query(value = "select * from group1 u where u.id in ( select group1_id from group_member where user_id = :userId )", nativeQuery = true)
+    List<GroupDto> findByUserId(@Param("userId") Integer userId);
 }
