@@ -1,13 +1,15 @@
 package com.neeson.example.controller;
 
-import com.neeson.example.entity.UserDto;
 import com.neeson.example.service.impl.UserServiceImpl;
 import com.neeson.example.util.AddressUtils;
 import com.neeson.example.util.CusAccessObjectUtil;
 import com.neeson.example.util.response.ResponseResult;
 import com.neeson.example.util.response.RestResultGenerator;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -75,4 +77,11 @@ public class UserController {
         return userService.login(phone, pwd);
     }
 
+
+    @ApiOperation(value = "测试testRedis", produces = "application/json")
+    @RequestMapping(value = "/testRedis", method = RequestMethod.GET)
+    public ResponseResult testRedis(
+                                @ApiParam(value = "号码", required = true) @RequestParam Integer code) {
+        return userService.testRedis(code);
+    }
 }

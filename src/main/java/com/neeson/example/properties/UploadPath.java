@@ -1,13 +1,17 @@
 package com.neeson.example.properties;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.neeson.example.util.ParamsConfig;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UploadPath {
 
-    @Value("${upload.path}")
+//    @Value("${upload.path}")
     private String path;
+
+    public UploadPath() {
+        path = ParamsConfig.getUploadDir();
+    }
 
     public String getPath() {
         return path;

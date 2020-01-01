@@ -24,7 +24,7 @@ public class Swagger {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.neeson.example.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.neeson.example"))
                 .paths(PathSelectors.any())
                 .build();
     }
@@ -33,6 +33,8 @@ public class Swagger {
         return new ApiInfoBuilder()
                 .title("API")
                 .description("example")
+                .termsOfServiceUrl("https://www.baidu.com/")//服务地址
+//                .contact(new Contact("cqc", "https://www.baidu.com/", "leomple@163.com"))//联系信息
                 .version("1.0")
                 .build();
     }

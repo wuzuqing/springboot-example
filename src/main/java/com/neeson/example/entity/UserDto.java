@@ -5,13 +5,15 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @ToString
 @Entity
 @Data
 @Table(name = "user")
-public class UserDto {
+public class UserDto implements Serializable {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

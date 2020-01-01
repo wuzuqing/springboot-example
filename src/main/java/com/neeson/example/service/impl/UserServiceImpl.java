@@ -15,12 +15,14 @@ import com.neeson.example.entity.*;
 import com.neeson.example.repository.UserRepository;
 import com.neeson.example.service.IUserService;
 import com.neeson.example.util.RandomValue;
+import com.neeson.example.util.RedisUtil;
 import com.neeson.example.util.response.ResponseResult;
 import com.neeson.example.util.response.RestResultGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -52,6 +54,9 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     FriendServiceImpl friendService;
 
+
+    @Resource
+    private RedisUtil redisUtil;
 
     @Override
     public ResponseResult getUserInfoByToken(String token) {
@@ -124,14 +129,23 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public ResponseResult getUser(Integer id) {
-        Optional<UserDto> userDto = mUserRepository.findById(id);
-        if (userDto.isPresent()) {
-            clearGm(userDto.get());
-            return RestResultGenerator.genResult(userDto.get(), "获取成功");
+
+        UserDto result = null;
+        String key = "user_" + id;
+        result = redisUtil.getObject(key, UserDto.class);
+        if (result == null) {
+            Optional<UserDto> userDto = mUserRepository.findById(id);
+            if (userDto.isPresent()) {
+                result = userDto.get();
+                redisUtil.setObject(key, result);
+            }
+        }
+        if (result != null) {
+            clearGm(result);
+            return RestResultGenerator.genResult(result, "获取成功");
         } else {
             return RestResultGenerator.genResult(null, "获取失败,找不到该用户");
         }
-
     }
 
     @Override
@@ -190,5 +204,12 @@ public class UserServiceImpl implements IUserService {
                 return RestResultGenerator.genErrorResult("密码错误");
             }
         }
+    }
+
+    @Override
+    public ResponseResult testRedis(Integer code) {
+        String key = "key" + code;
+        redisUtil.set(key, code);
+        return RestResultGenerator.genResult(redisUtil.hasKey(key), "success");
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.MultipartConfigElement;
@@ -15,6 +16,7 @@ import javax.servlet.MultipartConfigElement;
  * @author neeson
  */
 @SpringBootApplication
+@EnableSwagger2
 @MapperScan("com.neeson.example.mapper")
 public class SpringbootExampleApplication {
 

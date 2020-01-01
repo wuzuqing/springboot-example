@@ -34,4 +34,6 @@ public interface IUserService {
 
     ResponseResult login(String phone, String pwd);
 
+    ResponseResult testRedis(Integer code);
+
 }
