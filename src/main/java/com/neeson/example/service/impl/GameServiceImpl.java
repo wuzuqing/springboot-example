@@ -71,6 +71,29 @@ public class GameServiceImpl implements IGameService {
 
     }
 
+
+    @Override
+    public ResponseResult getTaskRecord(String account, String area) {
+        String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        GameAccountTaskRecordDto model = recordRepository.findGameAccountDtoByAccountAndAreaAndFinishData(account, area, today);
+        if (model !=null) {
+            return RestResultGenerator.genResult(model,"success");
+        } else {
+            return RestResultGenerator.genErrorResult("not value ");
+        }
+    }
+
+
+    @Override
+    public ResponseResult getPoints(String flag) {
+        Optional<GamePointDto> optional = pointRepository.findById(flag);
+        if (optional.isPresent()) {
+            return RestResultGenerator.genResult(optional.get(),"success");
+        } else {
+            return RestResultGenerator.genErrorResult("not value in flag");
+        }
+    }
+
     @Override
     public ResponseResult updatePoints(String flag, String type, String points) {
         Optional<GamePointDto> optional = pointRepository.findById(flag);

@@ -31,18 +31,36 @@ public class GameController {
     @ApiOperation(value = "添加进入完成任务", produces = "application/json")
     @RequestMapping(value = "/updateTaskRecord", method = RequestMethod.POST)
     public ResponseResult updateTaskRecord(@ApiParam(value = "账号", required = true) @RequestParam String account,
-                                   @ApiParam(value = "区号", required = true) @RequestParam String area,
-                                   @ApiParam(value = "完成任务", required = true) @RequestParam String task
+                                           @ApiParam(value = "区号", required = true) @RequestParam String area,
+                                           @ApiParam(value = "完成任务", required = true) @RequestParam String task
     ) {
-        return  gameService.updateTaskRecord(account, area, task);
+        return gameService.updateTaskRecord(account, area, task);
     }
+
+
+    @ApiOperation(value = "获取进入完成任务", produces = "application/json")
+    @RequestMapping(value = "/getTaskRecord", method = RequestMethod.GET)
+    public ResponseResult getTaskRecord(@ApiParam(value = "账号", required = true) @RequestParam String account,
+                                        @ApiParam(value = "区号", required = true) @RequestParam String area
+    ) {
+        return gameService.getTaskRecord(account, area);
+    }
+
 
     @ApiOperation(value = "更新坐标及颜色", produces = "application/json")
     @RequestMapping(value = "/updatePoints", method = RequestMethod.POST)
     public ResponseResult updatePoints(@ApiParam(value = "标记 width_height_dpi", required = true) @RequestParam String flag,
-                                           @ApiParam(value = "类型", required = true) @RequestParam String type,
-                                           @ApiParam(value = "坐标集合", required = true) @RequestParam String points
+                                       @ApiParam(value = "类型", required = true) @RequestParam String type,
+                                       @ApiParam(value = "坐标集合", required = true) @RequestParam String points
     ) {
-        return  gameService.updatePoints(flag, type, points);
+        return gameService.updatePoints(flag, type, points);
     }
+
+    @ApiOperation(value = "获取进入完成任务", produces = "application/json")
+    @RequestMapping(value = "/getPoints", method = RequestMethod.GET)
+    public ResponseResult getPoints(@ApiParam(value = "标记 width_height_dpi", required = true) @RequestParam String flag
+    ) {
+        return gameService.getPoints(flag);
+    }
+
 }

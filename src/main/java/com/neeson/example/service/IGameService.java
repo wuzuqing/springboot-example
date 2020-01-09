@@ -24,7 +24,11 @@ import com.neeson.example.util.response.ResponseResult;
 public interface IGameService {
 
     ResponseResult updateTaskRecord(String account, String area, String tasks);
+    ResponseResult getTaskRecord(String account, String area);
+
 
 
     ResponseResult updatePoints(String flag,String type ,String points);
+
+    ResponseResult getPoints(String flag);
 }
