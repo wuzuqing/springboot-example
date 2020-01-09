@@ -1,0 +1,48 @@
+package com.neeson.example.controller;
+
+import com.neeson.example.service.impl.GameServiceImpl;
+import com.neeson.example.util.response.ResponseResult;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * Created with IntelliJ IDEA.
+ *
+ * @author: neeson
+ * Date: 2018/3/30
+ * Time: 17:52
+ * Description:
+ */
+@Api("游戏相关")
+@RestController
+@RequestMapping("/game")
+public class GameController {
+
+    @Autowired
+    private GameServiceImpl gameService;
+
+
+    @ApiOperation(value = "添加进入完成任务", produces = "application/json")
+    @RequestMapping(value = "/updateTaskRecord", method = RequestMethod.POST)
+    public ResponseResult updateTaskRecord(@ApiParam(value = "账号", required = true) @RequestParam String account,
+                                   @ApiParam(value = "区号", required = true) @RequestParam String area,
+                                   @ApiParam(value = "完成任务", required = true) @RequestParam String task
+    ) {
+        return  gameService.updateTaskRecord(account, area, task);
+    }
+
+    @ApiOperation(value = "更新坐标及颜色", produces = "application/json")
+    @RequestMapping(value = "/updatePoints", method = RequestMethod.POST)
+    public ResponseResult updatePoints(@ApiParam(value = "标记 width_height_dpi", required = true) @RequestParam String flag,
+                                           @ApiParam(value = "类型", required = true) @RequestParam String type,
+                                           @ApiParam(value = "坐标集合", required = true) @RequestParam String points
+    ) {
+        return  gameService.updatePoints(flag, type, points);
+    }
+}

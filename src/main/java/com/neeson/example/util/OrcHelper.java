@@ -53,7 +53,7 @@ public class OrcHelper {
          * 19
          * 29
          */
-        test(4);
+        test(13);
         HighGui.waitKey();
     }
 
@@ -64,10 +64,11 @@ public class OrcHelper {
         Mat src = Imgcodecs.imread(fileName);
         Mat dst = new Mat();
 
+
 //        // 3
         int beiShu = 3;
         int minHeight = 12;
-        int midHeight = 22;
+        int midHeight = 24;
         int maxHeight1 = 28;
         int maxHeight2 = 36;
         int minWidth = 40;
@@ -96,7 +97,9 @@ public class OrcHelper {
 
         Mat erodeElement = Imgproc.getStructuringElement(Imgproc.MARKER_CROSS, new Size(14, 1));
         Imgproc.erode(dst, dst, erodeElement);
-
+//        erodeElement = Imgproc.getStructuringElement(Imgproc.MARKER_CROSS, new Size(14, 1));
+//        Imgproc.erode(dst, dst, erodeElement);
+        HighGui.imshow("显示图片2",dst.clone());
         List<MatOfPoint> contoursList = new ArrayList<>();
         Imgproc.findContours(dst, contoursList, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE, new Point(0, 0));
         Collections.sort(contoursList, new Comparator<MatOfPoint>() {
