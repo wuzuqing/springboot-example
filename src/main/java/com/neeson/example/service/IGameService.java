@@ -26,6 +26,7 @@ public interface IGameService {
     ResponseResult updateTaskRecord(String account, String area, String tasks);
     ResponseResult getTaskRecord(String account, String area);
 
+    ResponseResult getTaskRecord(String area);
 
 
     ResponseResult updatePoints(String flag,String type ,String points);

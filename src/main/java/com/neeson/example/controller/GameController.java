@@ -46,6 +46,13 @@ public class GameController {
         return gameService.getTaskRecord(account, area);
     }
 
+    @ApiOperation(value = "获取进入完成任务", produces = "application/json")
+    @RequestMapping(value = "/getTaskRecord", method = RequestMethod.GET)
+    public ResponseResult getTaskRecord(@ApiParam(value = "区号", required = true) @RequestParam String area
+    ) {
+        return gameService.getTaskRecord(area);
+    }
+
 
     @ApiOperation(value = "更新坐标及颜色", produces = "application/json")
     @RequestMapping(value = "/updatePoints", method = RequestMethod.POST)
