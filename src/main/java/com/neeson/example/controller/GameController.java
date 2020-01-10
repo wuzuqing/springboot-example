@@ -47,8 +47,8 @@ public class GameController {
     }
 
     @ApiOperation(value = "获取进入完成任务", produces = "application/json")
-    @RequestMapping(value = "/getTaskRecord", method = RequestMethod.GET)
-    public ResponseResult getTaskRecord(@ApiParam(value = "区号", required = true) @RequestParam String area
+    @RequestMapping(value = "/getTaskRecords", method = RequestMethod.GET)
+    public ResponseResult getTaskRecords(@ApiParam(value = "区号", required = true) @RequestParam String area
     ) {
         return gameService.getTaskRecord(area);
     }
@@ -56,7 +56,7 @@ public class GameController {
 
     @ApiOperation(value = "更新坐标及颜色", produces = "application/json")
     @RequestMapping(value = "/updatePoints", method = RequestMethod.POST)
-    public ResponseResult updatePoints(@ApiParam(value = "标记 width_height_dpi", required = true) @RequestParam String flag,
+    public ResponseResult updatePoints(@ApiParam(value = "标记 width_height", required = true) @RequestParam String flag,
                                        @ApiParam(value = "类型", required = true) @RequestParam String type,
                                        @ApiParam(value = "坐标集合", required = true) @RequestParam String points
     ) {
@@ -65,9 +65,25 @@ public class GameController {
 
     @ApiOperation(value = "获取进入完成任务", produces = "application/json")
     @RequestMapping(value = "/getPoints", method = RequestMethod.GET)
-    public ResponseResult getPoints(@ApiParam(value = "标记 width_height_dpi", required = true) @RequestParam String flag
+    public ResponseResult getPoints(@ApiParam(value = "标记 width_height", required = true) @RequestParam String flag
     ) {
         return gameService.getPoints(flag);
+    }
+    @ApiOperation(value = "获取进入完成任务", produces = "application/json")
+    @RequestMapping(value = "/getItemCoord", method = RequestMethod.GET)
+    public ResponseResult getItemCoord(@ApiParam(value = "标记 width_height", required = true) @RequestParam String flag,
+                                       @ApiParam(value = "路径 page", required = true) @RequestParam String page
+    ) {
+        return gameService.getItemCoord(flag,page);
+    }
+
+    @ApiOperation(value = "更新页面数据", produces = "application/json")
+    @RequestMapping(value = "/updatePageData", method = RequestMethod.POST)
+    public ResponseResult updatePageData(@ApiParam(value = "标记 width_height", required = true) @RequestParam String flag,
+                                       @ApiParam(value = "页面", required = true) @RequestParam String page,
+                                       @ApiParam(value = "坐标数据", required = true) @RequestParam String data
+    ) {
+        return gameService.updatePageData(flag, page, data);
     }
 
 }

@@ -32,4 +32,8 @@ public interface IGameService {
     ResponseResult updatePoints(String flag,String type ,String points);
 
     ResponseResult getPoints(String flag);
+
+    ResponseResult getItemCoord(String flag, String page);
+
+    ResponseResult updatePageData(String flag, String page, String data);
 }
