@@ -71,8 +71,8 @@ public class GameServiceImpl implements IGameService {
             model.setAccount(account);
             model.setArea(area);
             model.setFinishTask(tasks);
-//            model.setFinishData(today);
-//            model.setPwd("123456");
+            model.setFinishData(today);
+            model.setPwd("123456");
         }
         recordRepository.saveAndFlush(model);
         return RestResultGenerator.genResult("success");
