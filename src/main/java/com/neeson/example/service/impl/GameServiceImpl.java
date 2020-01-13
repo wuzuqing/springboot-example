@@ -159,6 +159,10 @@ public class GameServiceImpl implements IGameService {
     @Override
     public ResponseResult getItemCoord(String flag, String page) {
         GamePageDataDto model = gamePageDataRepository.findGamePageDataDtoByFlagAndPage(flag, page);
-        return RestResultGenerator.genResult(model.getData(), "success");
+        if (model==null){
+            return RestResultGenerator.genResult("", "success");
+        }else{
+            return RestResultGenerator.genResult(model.getData(), "success");
+        }
     }
 }
