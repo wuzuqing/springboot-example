@@ -55,8 +55,8 @@ public class UserServiceImpl implements IUserService {
     FriendServiceImpl friendService;
 
 
-    @Resource
-    private RedisUtil redisUtil;
+//    @Resource
+//    private RedisUtil redisUtil;
 
     @Override
     public ResponseResult getUserInfoByToken(String token) {
@@ -132,14 +132,14 @@ public class UserServiceImpl implements IUserService {
 
         UserDto result = null;
         String key = "user_" + id;
-        result = redisUtil.getObject(key, UserDto.class);
-        if (result == null) {
-            Optional<UserDto> userDto = mUserRepository.findById(id);
-            if (userDto.isPresent()) {
-                result = userDto.get();
-                redisUtil.setObject(key, result);
-            }
+//        result = redisUtil.getObject(key, UserDto.class);
+//        if (result == null) {
+        Optional<UserDto> userDto = mUserRepository.findById(id);
+        if (userDto.isPresent()) {
+            result = userDto.get();
+//                redisUtil.setObject(key, result);
         }
+//        }
         if (result != null) {
             clearGm(result);
             return RestResultGenerator.genResult(result, "获取成功");
@@ -209,7 +209,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public ResponseResult testRedis(Integer code) {
         String key = "key" + code;
-        redisUtil.set(key, code);
-        return RestResultGenerator.genResult(redisUtil.hasKey(key), "success");
+//        redisUtil.set(key, code);
+        return RestResultGenerator.genResult(key, "success");
     }
 }
