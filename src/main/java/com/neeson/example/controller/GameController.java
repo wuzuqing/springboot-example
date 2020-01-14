@@ -64,6 +64,13 @@ public class GameController {
     }
 
     @ApiOperation(value = "获取进入完成任务", produces = "application/json")
+    @RequestMapping(value = "/getBasePoints", method = RequestMethod.POST)
+    public ResponseResult getBasePoints(@ApiParam(value = "标记 width_height", required = true) @RequestParam String flag
+    ) {
+        return gameService.getPoints(flag);
+    }
+
+    @ApiOperation(value = "获取进入完成任务", produces = "application/json")
     @RequestMapping(value = "/getPoints", method = RequestMethod.GET)
     public ResponseResult getPoints(@ApiParam(value = "标记 width_height", required = true) @RequestParam String flag
     ) {
