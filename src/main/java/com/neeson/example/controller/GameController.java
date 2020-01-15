@@ -38,7 +38,7 @@ public class GameController {
     }
 
 
-    @ApiOperation(value = "获取进入完成任务", produces = "application/json")
+    @ApiOperation(value = "获取今日完成任务", produces = "application/json")
     @RequestMapping(value = "/getTaskRecord", method = RequestMethod.GET)
     public ResponseResult getTaskRecord(@ApiParam(value = "账号", required = true) @RequestParam String account,
                                         @ApiParam(value = "区号", required = true) @RequestParam String area
@@ -46,7 +46,7 @@ public class GameController {
         return gameService.getTaskRecord(account, area);
     }
 
-    @ApiOperation(value = "获取进入完成任务", produces = "application/json")
+    @ApiOperation(value = "获取今日完成任务", produces = "application/json")
     @RequestMapping(value = "/getTaskRecords", method = RequestMethod.GET)
     public ResponseResult getTaskRecords(@ApiParam(value = "区号", required = true) @RequestParam String area
     ) {
@@ -61,6 +61,13 @@ public class GameController {
                                        @ApiParam(value = "坐标集合", required = true) @RequestParam String points
     ) {
         return gameService.updatePoints(flag, type, points);
+    }
+
+    @ApiOperation(value = "获取进入完成任务", produces = "application/json")
+    @RequestMapping(value = "/getBasePoints", method = RequestMethod.POST)
+    public ResponseResult getBasePoints(@ApiParam(value = "标记 width_height", required = true) @RequestParam String flag
+    ) {
+        return gameService.getPoints(flag);
     }
 
     @ApiOperation(value = "获取进入完成任务", produces = "application/json")
