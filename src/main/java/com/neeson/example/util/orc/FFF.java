@@ -119,28 +119,45 @@ public class FFF {
     public static void main(String[] args) {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 //        imgMatching2();
-//        test3();
-        suanFaFAST();
+        test3();
+//        suanFaFAST();
     }
 
     private static void test3() {
         // D:\cut\1579071256455_403\对比
-        File dir = new File("D:\\cut\\1579074412603_403\\test");
+        File dir = new File("D:\\cut\\1579082614948_405\\test");
+//        File dir = new File("D:\\cut\\1579074412603_403");
         File[] files = dir.listFiles();
         if (files == null) {
             return;
         }
+        for (File file : files) {
+            if (file.isFile()){
+                Mat mat = Imgcodecs.imread(file.getAbsolutePath());
+//                if (file.getName().endsWith("2.png")){
+//                    double[] doubles = mat.get(mat.rows() / 2, mat.cols() / 2);
+//                    System.out.println( file.getName()+" : "+ Arrays.toString(doubles));
+//                }else{
+//                double[] doubles = mat.get(mat.rows() / 2, mat.cols() / 2);
+//                System.out.println( file.getName()+" : "+ Arrays.toString(doubles));
+//                }
+                double[] doubles = mat.get(mat.rows() / 2, mat.cols() / 2);
+                Color color = new Color((int) doubles[2], (int) doubles[1], (int) doubles[0], 255);
+                String hexString = Integer.toHexString(color(color));
+                System.out.println( file.getName()+" : "+ Arrays.toString(doubles) +"   #"+ hexString);
+            }
+        }
         // left+(288-tempW)/2, top-tempW-10+335
-        int totalValue;
-        int index = 0;
-        File one = files[0];
-        File two = files[1];
-        File three = files[2];
-
-        printValue(one,1);
-        printValue(two,3);
-        //不动
-        printValue(three,0);
+//        int totalValue;
+//        int index = 0;
+//        File one = files[0];
+//        File two = files[1];
+//        File three = files[2];
+//
+//        printValue(one,1);
+//        printValue(two,3);
+//        //不动
+//        printValue(three,0);
     }
 
     private static void printValue(File file, int col) {
@@ -148,7 +165,6 @@ public class FFF {
         if (mat.height() < 100) {
             return;
         }
-
         mat = new Mat(mat, new Rect((mat.width() - 100) / 2, mat.height() - 80 - 10, 100, 80));
         int rows = mat.rows();
         int totalValue = 0;
