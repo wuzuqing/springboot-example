@@ -5,9 +5,9 @@ spring:
     prefix: classpath:/templates/
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://120.79.16.93:3306/test?useUnicode=true&characterEncoding=utf8&useSSL=true
+    url: jdbc:mysql://106.55.164.62:3306/test?useUnicode=true&characterEncoding=utf8
     username: root
-    password: wzq,./1991
+    password: Fls,./19910211
     driver-class-name: com.mysql.jdbc.Driver
     initialSize: 30
     minIdle: 30
@@ -29,7 +29,7 @@ spring:
       cache-null-values: false #是否缓存空值
   redis:
     port: 6379
-    host: 120.79.16.93
+    host: 106.55.164.62
     lettuce:
       pool:
         max-active: 8
