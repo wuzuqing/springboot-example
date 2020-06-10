@@ -1,55 +1,321 @@
-//package com.neeson.example.util.orc;
+package com.neeson.example.util.orc;
+
+import org.opencv.core.*;
+import org.opencv.features2d.*;
+import org.opencv.highgui.HighGui;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
+
+import java.awt.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.opencv.core.Core.NORM_HAMMING;
+
+public class FFF {
+
+    public static void imgMatching2() {
+        int index = 2;
+//        Mat base_src = Imgcodecs.imread("D:\\base_" + index + ".png");
+        Mat base_src = Imgcodecs.imread("D:\\" + index + ".png");
+        Imgproc.cvtColor(base_src, base_src, Imgproc.COLOR_BGR2GRAY);
+//        Imgproc.
+
+        Mat dst = new Mat();
+        Core.inRange(base_src, new Scalar(78, 43, 46), new Scalar(110, 255, 255), dst);
+        int ratio = 6;
+        double defIndex0 = 76;
+        double defIndex1 = 112;
+        double defIndex2 = 71;
+//        Imgproc.resize(base_src,base_src,new Size(base_src.width()/ratio,base_src.height()/ratio));
+//        int cols = base_src.cols();
+//        int rows = base_src.rows();
 //
-//import org.opencv.core.*;
-//import org.opencv.features2d.DescriptorMatcher;
-//import org.opencv.imgcodecs.Imgcodecs;
-//import org.opencv.imgproc.Imgproc;
-//import org.opencv.features2d.*;
-//public class FFF {
-//
-//    public void imgMatching2() throws Exception {
-//        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-//        Mat src_base = Imgcodecs.imread("D:\\test\\test5.jpg");
-//        Mat src_test = Imgcodecs.imread("D:\\test\\test3.jpg");
-//        Mat gray_base = new Mat();
-//        Mat gray_test = new Mat();
-//        // 转换为灰度
-//        Imgproc.cvtColor(src_base, gray_base, Imgproc.COLOR_RGB2GRAY);
-//        Imgproc.cvtColor(src_test, gray_test, Imgproc.COLOR_RGB2GRAY);
-//        // 初始化ORB检测描述子
-//        FeatureDetector featureDetector = FastFeatureDetector.create(FastFeatureDetector.ORB);//特别提示下这里opencv暂时不支持SIFT、SURF检测方法，这个好像是opencv(windows) java版的一个bug,本人在这里被坑了好久。
-//        DescriptorExtractor descriptorExtractor = DescriptorExtractor.create(DescriptorExtractor.ORB);
-//        // 关键点及特征描述矩阵声明
-//        MatOfKeyPoint keyPoint1 = new MatOfKeyPoint(), keyPoint2 = new MatOfKeyPoint();
-//        Mat descriptorMat1 = new Mat(), descriptorMat2 = new Mat();
-//        // 计算ORB特征关键点
-//        featureDetector.detect(gray_base, keyPoint1);
-//        featureDetector.detect(gray_test, keyPoint2);
-//        // 计算ORB特征描述矩阵
-//        descriptorExtractor.compute(gray_base, keyPoint1, descriptorMat1);
-//        descriptorExtractor.compute(gray_test, keyPoint2, descriptorMat2);
-//        float result = 0;
-//        // 特征点匹配
-//        System.out.println("test5：" + keyPoint1.size());
-//        System.out.println("test3：" + keyPoint2.size());
-//        if (!keyPoint1.size().empty() && !keyPoint2.size().empty()) {
-//            // FlannBasedMatcher matcher = new FlannBasedMatcher();
-//            DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE_L1);
-//            MatOfDMatch matches = new MatOfDMatch();
-//            matcher.match(descriptorMat1, descriptorMat2, matches);
-//            // 最优匹配判断
-//            double minDist = 100;
-//            DMatch[] dMatchs = matches.toArray();
-//            int num = 0;
-//            for (int i = 0; i < dMatchs.length; i++) {
-//                if (dMatchs[i].distance <= 2 * minDist) {
-//                    result += dMatchs[i].distance * dMatchs[i].distance;
-//                    num++;
+//        long start = System.currentTimeMillis();
+//        int count = 0;
+//        for (int i = 0; i < cols; i++) {
+//            for (int j = 0; j < rows; j++) {
+//                double[] doubles = base_src.get(j, i);
+//                if (doubles[0] != defIndex0 && doubles[1] != defIndex1 && doubles[2] != defIndex2) {
+//                    System.out.println("row:" + j + " col:" + i + " value:" + Arrays.toString(doubles));
+//                    count++;
+//                    base_src.put(j,i,0,0,255);
+//                    break;
 //                }
 //            }
-//            // 匹配度计算
-//            result /= num;
 //        }
-//        System.out.println(result);
-//    }
-//}
+//        System.out.println("used:"+(System.currentTimeMillis()-start) + " count:"+count );
+        HighGui.imshow("22", dst);
+        HighGui.waitKey();
+    }
+
+
+    private static void test() {
+        //        String name = "yamen_choose";
+//        Mat src_base = Imgcodecs.imread("D:\\"+name+".png");
+//        Mat gray_base = new Mat();
+//        // 转换为灰度
+////        Imgproc.cvtColor(src_base, gray_base, Imgproc.COLOR_RGB2GRAY);//342  614
+//        // D:\cut\half  // 288 335
+//        Mat cut1 = new Mat(src_base,new Rect(54,328,288,335));
+//        Mat cut2 = new Mat(src_base,new Rect(403,328,288,335));
+//        Mat cut3 = new Mat(src_base,new Rect(755,328,288,335));
+////        Mat cut1 = new Mat(src_base,new Rect(36,323,321,346));
+////        Mat cut2 = new Mat(src_base,new Rect(385,323,321,346));
+////        Mat cut3 = new Mat(src_base,new Rect(737,323,321,346));
+//        // 210 30
+//        Imgcodecs.imwrite("D:\\"+name+"1.jpg",cut1);
+//        Imgcodecs.imwrite("D:\\"+name+"2.jpg",cut2);
+//        Imgcodecs.imwrite("D:\\"+name+"3.jpg",cut3);
+        // 288 335
+        //229 266
+
+        /**
+         *    private String [] colors = {
+         *         "#4D2210",//空
+         *         "#363636",//白板
+         *         "#344931",//绿色 男爵
+         *         "#363636",
+         *         "#C1861C", //黄1 #C2871C
+         *         "#363636",
+         *         "#E48A19",// 黄2 #E38818  #E58B1A
+         *         "#363636"
+         *
+         *     };
+         */
+        int x = 186, y = 31;
+        File file = new File("D:\\cut\\cardBg");
+        File[] files = file.listFiles();
+        int index = 0;
+        for (File temp : files) {
+            if (temp.isFile()) {
+                Mat tempMat = Imgcodecs.imread(temp.getAbsolutePath());
+                if (index == 5) {
+                    System.out.println(tempMat.rows() + "/" + tempMat.cols());
+                    Mat clone = tempMat.clone();
+                    clone.put(y, x, 0d, 0d, 255d);
+                    Imgcodecs.imwrite("D:\\clone1.jpg", clone);
+                }
+                index++;
+                // 30 250
+                double[] doubles = tempMat.get(y, x);
+                if (doubles != null) {
+                    Color color = new Color((int) doubles[2], (int) doubles[1], (int) doubles[0], 255);
+                    String hexString = Integer.toHexString(color(color));
+                    System.out.println(temp.getName() + " : #" + hexString);
+                }
+
+            }
+        }
+    }
+
+    private static int color(Color color) {
+        return (color.getAlpha() << 24) | (color.getRed() << 16) | (color.getGreen() << 8) | color.getBlue();
+    }
+
+
+    public static void main(String[] args) {
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+//        imgMatching2();
+        test3();
+//        suanFaFAST();
+    }
+
+    private static void test3() {
+        // D:\cut\1579071256455_403\对比
+        File dir = new File("D:\\cut\\1579082614948_405\\test");
+//        File dir = new File("D:\\cut\\1579074412603_403");
+        File[] files = dir.listFiles();
+        if (files == null) {
+            return;
+        }
+        for (File file : files) {
+            if (file.isFile()){
+                Mat mat = Imgcodecs.imread(file.getAbsolutePath());
+//                if (file.getName().endsWith("2.png")){
+//                    double[] doubles = mat.get(mat.rows() / 2, mat.cols() / 2);
+//                    System.out.println( file.getName()+" : "+ Arrays.toString(doubles));
+//                }else{
+//                double[] doubles = mat.get(mat.rows() / 2, mat.cols() / 2);
+//                System.out.println( file.getName()+" : "+ Arrays.toString(doubles));
+//                }
+                double[] doubles = mat.get(mat.rows() / 2, mat.cols() / 2);
+                Color color = new Color((int) doubles[2], (int) doubles[1], (int) doubles[0], 255);
+                String hexString = Integer.toHexString(color(color));
+                System.out.println( file.getName()+" : "+ Arrays.toString(doubles) +"   #"+ hexString);
+            }
+        }
+        // left+(288-tempW)/2, top-tempW-10+335
+//        int totalValue;
+//        int index = 0;
+//        File one = files[0];
+//        File two = files[1];
+//        File three = files[2];
+//
+//        printValue(one,1);
+//        printValue(two,3);
+//        //不动
+//        printValue(three,0);
+    }
+
+    private static void printValue(File file, int col) {
+        Mat mat = Imgcodecs.imread(file.getAbsolutePath());
+        if (mat.height() < 100) {
+            return;
+        }
+        mat = new Mat(mat, new Rect((mat.width() - 100) / 2, mat.height() - 80 - 10, 100, 80));
+        int rows = mat.rows();
+        int totalValue = 0;
+        for (int i = 0; i < rows; i++) {
+            double[] doubles = mat.get(i, col);
+            totalValue += (doubles[0] + doubles[1] + doubles[2]);
+        }
+        System.out.println(file.getName() + " " + totalValue + " " + Arrays.toString(mat.get(0, col)));
+    }
+
+    private static void suanFaORB(){
+        //Keypoint detection的演算法有很多，openCV便提供了十一种方法：
+        //
+        //“FAST" – FastFeatureDetector
+        //“STAR" – StarFeatureDetector
+        //“SIFT" – SIFT (nonfree module)
+        //“SURF" – SURF (nonfree module)
+        //“ORB" – ORB
+        //“BRISK" – BRISK
+        //“MSER" – MSER
+        //“GFTT" – GoodFeaturesToTrackDetector
+        //“HARRIS" – GoodFeaturesToTrackDetector with Harris detector enabled
+        //“Dense" – DenseFeatureDetector
+        //“SimpleBlob" – SimpleBlobDetector
+        //         还有以下二种Grid和Pyramid的方式，可合并以上各方法来使用：
+        //“Grid" – GridAdaptedFeatureDetector
+        //“Pyramid" – PyramidAdaptedFeatureDetector  
+        //————————————————
+        //detector = cv2.FeatureDetector_create(“FAST")
+        //
+        //kps = detector.detect(gray)
+        //
+        //print(“# of keypoints: {}".format(len(kps)))
+        // D:\cut\1579074412603_403\test\1.png
+//        Mat mat = Imgcodecs.imread("D:\\cut\\half\\23.png");
+//
+        Mat mat = Imgcodecs.imread("D:\\cut\\1579074412603_403\\test\\1.png");
+
+//        mat = new Mat(mat,new Rect(36,45,mat.width()-36*2,mat.height()-55));
+        Imgproc.cvtColor(mat,mat,Imgproc.COLOR_BGR2GRAY);
+        ORB detector = ORB.create();
+        MatOfKeyPoint matOfKeyPoint = new MatOfKeyPoint();
+        detector.detectAndCompute(mat,new Mat(),matOfKeyPoint,mat);
+
+        Mat dst = new Mat();
+        Features2d.drawKeypoints(mat,matOfKeyPoint,dst);
+//
+        mat = Imgcodecs.imread("D:\\cut\\half\\23.png");
+        Imgproc.cvtColor(mat,mat,Imgproc.COLOR_BGR2GRAY);
+        MatOfKeyPoint matOfKeyPoint1 = new MatOfKeyPoint();
+        Mat dst1 = new Mat();
+
+        detector.detectAndCompute(mat,new Mat(),matOfKeyPoint1,mat);
+//        Features2d.drawKeypoints(mat,matOfKeyPoint1,dst1);
+
+
+        BFMatcher matcher = BFMatcher.create(NORM_HAMMING);
+        List<MatOfDMatch> matches = new ArrayList<>();
+        matcher.knnMatch(dst,dst1,matches,2);
+
+        List<DMatch> result = new ArrayList<>();
+        for (MatOfDMatch match : matches) {
+//            List<DMatch> matches = match.toList();
+//            for (DMatch dMatch : matches) {
+//                if (dMatch.distance>)
+//            }
+        }
+
+//        List<KeyPoint> keyPoints = matOfKeyPoint.toList();
+//
+//
+//        List<MatOfPoint> nameContours = new ArrayList<>();
+//
+//        for (KeyPoint point : keyPoints) {
+//            nameContours.add(new MatOfPoint(point.pt));
+//        }
+//
+//        Imgproc.drawContours(mat, nameContours, 0, new Scalar( 255, 100, 20), -1);
+        MatOfDMatch matOfDMatch = new MatOfDMatch();
+        Mat out = new Mat();
+        Features2d.drawMatches(dst,matOfKeyPoint,dst1,matOfKeyPoint,matOfDMatch,out);
+
+
+        System.out.println(matOfKeyPoint.toList().size());
+        HighGui.imshow("point",dst);
+        HighGui.imshow("point1",dst1);
+        HighGui.imshow("out",out);
+        HighGui.waitKey();
+    }
+    private static void suanFaFAST(){
+        //Keypoint detection的演算法有很多，openCV便提供了十一种方法：
+        //
+        //“FAST" – FastFeatureDetector
+        //“STAR" – StarFeatureDetector
+        //“SIFT" – SIFT (nonfree module)
+        //“SURF" – SURF (nonfree module)
+        //“ORB" – ORB
+        //“BRISK" – BRISK
+        //“MSER" – MSER
+        //“GFTT" – GoodFeaturesToTrackDetector
+        //“HARRIS" – GoodFeaturesToTrackDetector with Harris detector enabled
+        //“Dense" – DenseFeatureDetector
+        //“SimpleBlob" – SimpleBlobDetector
+        //         还有以下二种Grid和Pyramid的方式，可合并以上各方法来使用：
+        //“Grid" – GridAdaptedFeatureDetector
+        //“Pyramid" – PyramidAdaptedFeatureDetector  
+        //————————————————
+        //detector = cv2.FeatureDetector_create(“FAST")
+        //
+        //kps = detector.detect(gray)
+        //
+        //print(“# of keypoints: {}".format(len(kps)))
+        // D:\cut\1579074412603_403\test\1.png
+//        Mat mat = Imgcodecs.imread("D:\\cut\\half\\23.png");
+//
+        Mat mat = Imgcodecs.imread("D:\\cut\\1579074412603_403\\test\\1.png");
+
+//        mat = new Mat(mat,new Rect(36,45,mat.width()-36*2,mat.height()-55));
+        Imgproc.cvtColor(mat,mat,Imgproc.COLOR_BGR2GRAY);
+        FastFeatureDetector detector = FastFeatureDetector.create();
+        MatOfKeyPoint matOfKeyPoint = new MatOfKeyPoint();
+        detector.detect(mat,matOfKeyPoint);
+        Mat dst = new Mat();
+        Features2d.drawKeypoints(mat,matOfKeyPoint,dst);
+//
+         mat = Imgcodecs.imread("D:\\cut\\half\\23.png");
+        Imgproc.cvtColor(mat,mat,Imgproc.COLOR_BGR2GRAY);
+        MatOfKeyPoint matOfKeyPoint1 = new MatOfKeyPoint();
+        Mat dst1 = new Mat();
+
+        detector.detect(mat,matOfKeyPoint1);
+        Features2d.drawKeypoints(mat,matOfKeyPoint1,dst1);
+//        List<KeyPoint> keyPoints = matOfKeyPoint.toList();
+//
+//
+//        List<MatOfPoint> nameContours = new ArrayList<>();
+//
+//        for (KeyPoint point : keyPoints) {
+//            nameContours.add(new MatOfPoint(point.pt));
+//        }
+//
+//        Imgproc.drawContours(mat, nameContours, 0, new Scalar( 255, 100, 20), -1);
+        MatOfDMatch matOfDMatch = new MatOfDMatch();
+        Mat out = new Mat();
+        Features2d.drawMatches(dst,matOfKeyPoint,dst1,matOfKeyPoint,matOfDMatch,out);
+
+
+        System.out.println(matOfKeyPoint.toList().size());
+        HighGui.imshow("point",dst);
+        HighGui.imshow("point1",dst1);
+        HighGui.imshow("out",out);
+        HighGui.waitKey();
+    }
+}
