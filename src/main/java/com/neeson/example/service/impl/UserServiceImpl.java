@@ -55,8 +55,8 @@ public class UserServiceImpl implements IUserService {
     FriendServiceImpl friendService;
 
 
-//    @Resource
-//    private RedisUtil redisUtil;
+    @Resource
+    private RedisUtil redisUtil;
 
     @Override
     public ResponseResult getUserInfoByToken(String token) {
@@ -209,7 +209,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public ResponseResult testRedis(Integer code) {
         String key = "key" + code;
-//        redisUtil.set(key, code);
+        redisUtil.set(key, code);
         return RestResultGenerator.genResult(key, "success");
     }
 }
