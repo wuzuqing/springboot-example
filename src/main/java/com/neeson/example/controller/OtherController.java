@@ -39,13 +39,16 @@ public class OtherController {
 //        return "false";
 
         String userAgent = request.getHeader("user-agent");
+        String result = "";
         if (userAgent != null && userAgent.contains("MicroMessenger")){
             System.out.println("微信支付");
+            result = "wxp://f2f00ZBs-ncNO-Mvy3HW-b8lG_tzi5afJeqE";
         }else if (userAgent !=null && userAgent.contains("AlipayClient")){
             System.out.println("支付宝支付");
+            result = "https://qr.alipay.com/fkx16025adjjxizcmcdun77";
         }
         System.out.println(userAgent);
-        return userAgent;
+        return result;
 //        return RestResultGenerator.genResult("http://www.baidu.com", "获取成功");
 //        return "http://www.baidu.com";
     }
