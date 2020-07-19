@@ -1,7 +1,12 @@
 package com.neeson.example.controller;
 
+import com.neeson.example.service.impl.OtherServiceImpl;
+import com.neeson.example.util.response.ResponseResult;
+import com.neeson.example.util.response.RestResultGenerator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +25,9 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/other")
 public class OtherController {
+
+    @Autowired
+    private OtherServiceImpl otherService;
 
 
     @ApiOperation(value = "获取支付url", produces = "application/json")
@@ -40,10 +48,10 @@ public class OtherController {
 
         String userAgent = request.getHeader("user-agent");
         String result = "";
-        if (userAgent != null && userAgent.contains("MicroMessenger")){
+        if (userAgent != null && userAgent.contains("MicroMessenger")) {
             System.out.println("微信支付");
             result = "wxp://f2f00ZBs-ncNO-Mvy3HW-b8lG_tzi5afJeqE";
-        }else if (userAgent !=null && userAgent.contains("AlipayClient")){
+        } else if (userAgent != null && userAgent.contains("AlipayClient")) {
             System.out.println("支付宝支付");
             result = "https://qr.alipay.com/fkx16025adjjxizcmcdun77";
         }
@@ -53,4 +61,10 @@ public class OtherController {
 //        return "http://www.baidu.com";
     }
 
+    @ApiOperation(value = "更新彩票记录", produces = "application/json")
+    @RequestMapping(value = "/updateCpRecord/{tag}", method = RequestMethod.POST)
+    public ResponseResult updateCpRecord(@PathVariable String tag) {
+        otherService.updateRecord(tag);
+        return RestResultGenerator.genResult("success", "获取成功");
+    }
 }
