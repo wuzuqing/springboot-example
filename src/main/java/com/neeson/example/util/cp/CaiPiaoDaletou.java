@@ -1,6 +1,8 @@
 package com.neeson.example.util.cp;
 
 import com.neeson.example.entity.DltCpDto;
+import com.neeson.example.entity.DltCpExtendDto;
+import com.neeson.example.repository.DltCpExtendRepository;
 import com.neeson.example.repository.DltCpRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -15,15 +17,17 @@ import java.util.List;
 public class CaiPiaoDaletou {
     private List<DltCpDto> result = new ArrayList<>();
 
-    public CaiPiaoDaletou(DltCpRepository dltCpRepository) {
+
+    public CaiPiaoDaletou(DltCpRepository dltCpRepository,DltCpExtendRepository dltCpExtendRepository) {
         this.dltCpRepository = dltCpRepository;
+        this.dltCpExtendRepository = dltCpExtendRepository;
     }
 
     public CaiPiaoDaletou() {
     }
 
     private DltCpRepository dltCpRepository;
-
+    DltCpExtendRepository dltCpExtendRepository;
     DltCpDto firstDltCpDto;
 
     public void updateRecord(Integer page) {
@@ -94,6 +98,11 @@ public class CaiPiaoDaletou {
                             if (dltCpRepository != null) {
                                 dltCpRepository.saveAll(result);
                             }
+                             List<DltCpExtendDto> resultExtend = new ArrayList<>();
+                            for (DltCpDto cpDto : result) {
+                                resultExtend.add(new DltCpExtendDto(cpDto));
+                            }
+                            dltCpExtendRepository.saveAll(resultExtend);
                             // save
                             System.out.println("总保存记录数量：" + result.size());
                         }else{

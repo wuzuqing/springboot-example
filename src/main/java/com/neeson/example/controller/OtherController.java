@@ -67,4 +67,11 @@ public class OtherController {
         otherService.updateRecord(tag);
         return RestResultGenerator.genResult("success", "获取成功");
     }
+
+    @ApiOperation(value = "更新彩票五行记录", produces = "application/json")
+    @RequestMapping(value = "/updateCpExtend/{tag}", method = RequestMethod.POST)
+    public ResponseResult updateCpExtend(@PathVariable String tag) {
+        otherService.updateCpExtend(tag);
+        return RestResultGenerator.genResult("success", "获取成功");
+    }
 }
