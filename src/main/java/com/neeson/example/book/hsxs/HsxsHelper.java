@@ -1,6 +1,7 @@
 package com.neeson.example.book.hsxs;
 
 import com.neeson.example.book.AbsBookJSoupHelper;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -19,12 +20,12 @@ public class HsxsHelper extends AbsBookJSoupHelper {
 
     @Override
     public Elements getRootElements(Document document) {
-        return document.getElementsByClass("artbody");
+        return document.getElementsByClass("textxq");
     }
 
     @Override
     protected String parseContent(Element rootElement) {
-        Elements cont = rootElement.getElementsByClass("cont");
+        Elements cont = rootElement.getElementsByClass("body");
         if (cont.size() > 0) {
 //            System.out.println("zhang:"+cont.get(0).text());
             return cont.get(0).text();
@@ -34,7 +35,7 @@ public class HsxsHelper extends AbsBookJSoupHelper {
 
     @Override
     protected String parseTitle(Element rootElement) {
-        Elements bookName = rootElement.getElementsByClass("arttit");
+        Elements bookName = rootElement.getElementsByClass("texttitle");
         String zhang = null;
         if (bookName.size() > 0) {
             zhang = bookName.get(0).text();
@@ -60,7 +61,8 @@ public class HsxsHelper extends AbsBookJSoupHelper {
             } else {
                 child = "/" + title + ".txt";
             }
-            child = child.trim().replaceAll("[|\\\\]","");
+            System.out.println("title:"+title +" url:"+ getUrl());
+            child = child.trim().replaceAll("[|\\\\?]","");
             File tempFile = new File(bookFile, child);
             FileOutputStream outputStream = new FileOutputStream(tempFile, false);
 //            outputStream.write(title.getBytes("utf-8")); //第几章

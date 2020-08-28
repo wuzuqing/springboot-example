@@ -1,5 +1,6 @@
 package com.neeson.example.controller;
 
+import com.neeson.example.book.SearchBookUtil;
 import com.neeson.example.service.impl.OtherServiceImpl;
 import com.neeson.example.util.response.ResponseResult;
 import com.neeson.example.util.response.RestResultGenerator;
@@ -72,6 +73,13 @@ public class OtherController {
     @RequestMapping(value = "/updateCpExtend/{tag}", method = RequestMethod.POST)
     public ResponseResult updateCpExtend(@PathVariable String tag) {
         otherService.updateCpExtend(tag);
+        return RestResultGenerator.genResult("success", "获取成功");
+    }
+
+    @ApiOperation(value = "下载小说", produces = "application/json")
+    @RequestMapping(value = "/downloadBook/{type}/{bookName}", method = RequestMethod.POST)
+    public ResponseResult downloadBook(@PathVariable String type,@PathVariable String bookName) {
+        SearchBookUtil.searchByType(type, bookName);
         return RestResultGenerator.genResult("success", "获取成功");
     }
 }

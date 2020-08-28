@@ -1,8 +1,10 @@
 package com.neeson.example.book.jawx;
 
-import com.neeson.example.book.*;
-import com.neeson.example.book.bxwx.BxwxSearchBookHelper;
-import com.neeson.example.book.dswx.DSWXBookHelper;
+
+import com.neeson.example.book.AbsBookJSoupHelper;
+import com.neeson.example.book.AbsDownload;
+import com.neeson.example.book.AbsSearchBookHelper;
+import com.neeson.example.book.BookCatalog;
 
 import java.io.File;
 
@@ -23,6 +25,7 @@ public class JiuAiWenXue extends AbsDownload {
     }
 
 
+    @Override
     protected boolean checkPath(String path) {
         return !bookCatalogs.containsKey(path);
     }

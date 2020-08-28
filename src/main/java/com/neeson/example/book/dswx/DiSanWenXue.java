@@ -1,6 +1,9 @@
 package com.neeson.example.book.dswx;
 
-import com.neeson.example.book.*;
+import com.neeson.example.book.AbsBookJSoupHelper;
+import com.neeson.example.book.AbsDownload;
+import com.neeson.example.book.BookCatalog;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 

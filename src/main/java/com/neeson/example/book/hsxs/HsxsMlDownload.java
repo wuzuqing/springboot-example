@@ -1,5 +1,6 @@
 package com.neeson.example.book.hsxs;
 
+
 import com.neeson.example.book.AbsBookJSoupHelper;
 import com.neeson.example.book.AbsDownload;
 import com.neeson.example.book.DownloadListener;
@@ -17,7 +18,7 @@ public class HsxsMlDownload extends AbsDownload {
 
     @Override
     protected String initHost() {
-        return "http://www.yinyinai111.com";
+        return "http://www.yinyinai505.com";
     }
 
     @Override
@@ -46,15 +47,14 @@ public class HsxsMlDownload extends AbsDownload {
 
     public static void main(String[] args) {
         //6562
-        String path = "/artlist/14-";
-        String name = "家庭乱伦";
-        int start = 2;
-        int end = 900;
+//        String path = "/artlist/14-";
+//        String name = "家庭乱伦";
+        final int start = 2;
         List<Fenlei> fenleis = new ArrayList<>();
 //        fenleis.add(new Fenlei(906,"/artlist/13-","都市言情"));
-//        fenleis.add(new Fenlei(900,"/artlist/15-","人妻女友"));
-//        fenleis.add(new Fenlei(902,"/artlist/16-","校园春色"));
-        fenleis.add(new Fenlei(886,"/artlist/14-","家庭乱伦"));
+//        fenleis.add(new Fenlei(20,"/artlist/15-","人妻女友"));
+        fenleis.add(new Fenlei(20,"/artlist/16-","校园春色"));
+//        fenleis.add(new Fenlei(20,"/artlist/14-","家庭乱伦"));
 //        fenleis.add(new Fenlei(888,"/artlist/17-","古典武侠"));
 //        fenleis.add(new Fenlei(884,"/artlist/19-","另类小说"));
 //        fenleis.add(new Fenlei(882,"/artlist/18-","性爱技巧"));
@@ -62,7 +62,7 @@ public class HsxsMlDownload extends AbsDownload {
 //        fenleis.add(new Fenlei(810,"/artlist/21-","其它小说"));
 
 
-        for (Fenlei fenlei : fenleis) {
+        for (final Fenlei fenlei : fenleis) {
             AbsDownload biXiaWenXue = new HsxsMlDownload(fenlei.path, fenlei.name, start, fenlei.end);
             biXiaWenXue.startDownload();
             biXiaWenXue.setListener(new DownloadListener() {

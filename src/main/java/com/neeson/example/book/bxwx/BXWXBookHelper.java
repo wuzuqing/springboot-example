@@ -1,6 +1,7 @@
 package com.neeson.example.book.bxwx;
 
 import com.neeson.example.book.AbsBookJSoupHelper;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -23,7 +24,10 @@ public class BXWXBookHelper extends AbsBookJSoupHelper {
     @Override
     protected String parseContent(Element rootElement) {
         Element contentElement = rootElement.getElementById("content");
-        return contentElement.text();
+        if(contentElement==null){
+            return "加载失败，暂无内容";
+        }
+        return contentElement.html();
     }
 
     @Override

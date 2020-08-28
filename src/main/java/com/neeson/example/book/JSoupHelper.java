@@ -1,7 +1,6 @@
 package com.neeson.example.book;
 
 
-import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -12,7 +11,6 @@ import java.util.List;
  * Created by Administrator on 2016/6/16.
  */
 
-@Slf4j
 public abstract class JSoupHelper {
 
 

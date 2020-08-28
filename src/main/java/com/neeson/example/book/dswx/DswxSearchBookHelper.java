@@ -1,14 +1,15 @@
 package com.neeson.example.book.dswx;
 
-import com.sun.deploy.net.URLEncoder;
 import com.neeson.example.book.AbsDownload;
 import com.neeson.example.book.AbsSearchBookHelper;
 import com.neeson.example.book.Callback;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 public class DswxSearchBookHelper extends AbsSearchBookHelper {
 

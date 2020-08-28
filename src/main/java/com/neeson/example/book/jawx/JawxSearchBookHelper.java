@@ -1,16 +1,15 @@
 package com.neeson.example.book.jawx;
 
-import com.alibaba.druid.util.StringUtils;
-import com.sun.deploy.net.URLEncoder;
 import com.neeson.example.book.AbsDownload;
 import com.neeson.example.book.AbsSearchBookHelper;
 import com.neeson.example.book.Callback;
-import com.neeson.example.book.bxwx.BiXiaWenXue;
+import org.apache.commons.lang.ObjectUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 public class JawxSearchBookHelper extends AbsSearchBookHelper {
 
@@ -37,7 +36,7 @@ public class JawxSearchBookHelper extends AbsSearchBookHelper {
         Elements elements = document.head().getElementsByTag("meta");
         for (Element element : elements) {
             String property = element.attr("property");
-            if (StringUtils.equals("og:url",property)){
+            if (ObjectUtils.equals("og:url",property)){
                 result = element.attr("content").replaceAll("https://www.9awx.com","");
             }
         }

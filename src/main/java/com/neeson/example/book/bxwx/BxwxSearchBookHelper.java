@@ -1,12 +1,15 @@
 package com.neeson.example.book.bxwx;
 
-import com.alibaba.druid.util.StringUtils;
 import com.neeson.example.book.AbsDownload;
 import com.neeson.example.book.AbsSearchBookHelper;
 import com.neeson.example.book.Callback;
+import org.apache.commons.lang.ObjectUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class BxwxSearchBookHelper extends AbsSearchBookHelper {
 
@@ -20,7 +23,15 @@ public class BxwxSearchBookHelper extends AbsSearchBookHelper {
 
     @Override
     public String searchUrl(String bookName) {
-        return "https://www.bxwxorg.com/search.html?searchtype=all&searchkey=" + bookName;
+        return "https://www.bxwxorg.com/search.html";
+    }
+
+    @Override
+    protected Document genDocument(String url) {
+        Map<String,String > params = new HashMap<>(2);
+        params.put("searchtype","all");
+        params.put("searchkey",bookName);
+        return getJsoupDocPost(url,params);
     }
 
     @Override
@@ -35,9 +46,10 @@ public class BxwxSearchBookHelper extends AbsSearchBookHelper {
         String value = "";
         for (Element element : elements) {
             value = element.text();
-            if (StringUtils.equals(value, bookName)) {
+            if (ObjectUtils.equals(value, bookName)) {
                 href = element.attr("href");
                 callResult(href);
+                return;
             }
         }
     }

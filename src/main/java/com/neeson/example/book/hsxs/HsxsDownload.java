@@ -1,5 +1,6 @@
 package com.neeson.example.book.hsxs;
 
+
 import com.neeson.example.book.AbsBookJSoupHelper;
 import com.neeson.example.book.AbsDownload;
 
@@ -18,7 +19,7 @@ public class HsxsDownload extends AbsDownload {
 
     @Override
     protected String initHost() {
-        return "http://www.yinyinai111.com";
+        return "http://www.yinyinai505.com";
     }
 
     @Override
@@ -35,19 +36,22 @@ public class HsxsDownload extends AbsDownload {
         return new HsxsHelper(bookFile, index);
     }
 
+    @Override
     protected void defaultCatalog() {
         int index = 1;
         File[] files = bookFile.listFiles();
         List<String> paths = new ArrayList<>();
         if (files != null) {
-            System.out.println(files[0].getAbsolutePath());
             try {
-                BufferedReader reader = new BufferedReader(new FileReader(files[0]));
+                int length = files.length;
                 String line = null;
-                while ((line = reader.readLine()) != null) {
-                    paths.add(line);
+                for (int i = 0; i < length; i++) {
+                    BufferedReader reader = new BufferedReader(new FileReader(files[i]));
+                    while ((line = reader.readLine()) != null) {
+                        paths.add(line);
+                    }
+                    reader.close();
                 }
-                reader.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -59,7 +63,7 @@ public class HsxsDownload extends AbsDownload {
                 index++;
             }
         } else {
-//            System.out.println(paths.toString());
+            System.out.println(paths.toString());
             for (String path : paths) {
                 bookCatalogs.put(path, createCatalog(path, String.format("第%d章", index), index));
                 index++;

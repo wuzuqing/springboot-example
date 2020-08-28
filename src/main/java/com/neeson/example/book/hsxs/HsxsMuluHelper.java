@@ -1,6 +1,7 @@
 package com.neeson.example.book.hsxs;
 
 import com.neeson.example.book.AbsBookJSoupHelper;
+import org.apache.commons.lang.StringUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -18,18 +19,20 @@ public class HsxsMuluHelper extends AbsBookJSoupHelper {
 
     @Override
     public Elements getRootElements(Document document) {
-        return document.getElementsByClass("artlist");
+        return document.getElementsByClass("textlist");
     }
 
     @Override
     protected String parseContent(Element rootElement) {
-        Elements list = rootElement.getElementsByTag("a");
+        Elements list = rootElement.getElementsByClass("body");
         StringBuilder sb = new StringBuilder();
         if (list.size() > 0) {
-//            System.out.println("zhang:"+cont.get(0).text());
-//            return cont.get(0).text();
             for (Element element : list) {
-                sb.append(element.attr("href")).append("\n");
+                Element a = element.getElementsByTag("a").get(0);
+                String href = a.attr("href");
+                if (!StringUtils.isBlank(href)){
+                    sb.append(href).append("\n");
+                }
             }
         }
         return sb.toString();
