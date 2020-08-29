@@ -8,6 +8,9 @@ import com.neeson.example.repository.BookRepository;
 import com.neeson.example.service.IBookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -103,5 +106,16 @@ public class BookServiceImpl implements IBookService {
         long start = System.currentTimeMillis();
         bookCatalogRepository.batchUpdate(list);
         System.out.println("saveAll  used :" + (System.currentTimeMillis() - start));
+    }
+
+    @Override
+    public List<BookCatalogDto> loadBookList(Long bookId, int page, int pageSize) {
+        PageRequest request = PageRequest.of(page, pageSize);
+        BookCatalogDto user = new BookCatalogDto();
+        user.setBookId(bookId);
+        Example<BookCatalogDto> example = Example.of(user);
+        bookCatalogRepository.findAll(example,request);
+        Page<BookCatalogDto> pageObj = bookCatalogRepository.findAll(request);
+        return pageObj.getContent();
     }
 }

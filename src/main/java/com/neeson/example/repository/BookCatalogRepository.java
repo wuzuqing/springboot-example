@@ -15,4 +15,7 @@ public interface BookCatalogRepository extends BaseRepository<BookCatalogDto, Lo
     List<BookCatalogDto> findByBookId(Long bookId);
 
     List<BookCatalogDto> findByBookIdAndContentIsNull(Long bookId);
+//
+//    @Query(value = "select * from book_catalog bc where bc.bookId = ?1  limit ?2,?3", nativeQuery = true)
+//    List<BookCatalogDto> loadBookCatalogList(Long bookId,Integer pageNo,Integer pageSize);
 }

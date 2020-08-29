@@ -17,4 +17,7 @@ public interface IBookService {
     void saveContent(String content, int index);
 
     void updateList( List<BookCatalogDto> list);
+
+    List<BookCatalogDto> loadBookList(Long bookId, int page, int pageSize);
+
 }
