@@ -2,8 +2,7 @@ package com.neeson.example.book.dswx;
 
 import com.neeson.example.book.AbsBookJSoupHelper;
 import com.neeson.example.book.AbsDownload;
-import com.neeson.example.book.BookCatalog;
-
+import com.neeson.example.entity.model.BookCatalogDto;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
@@ -41,8 +40,8 @@ public class DiSanWenXue extends AbsDownload {
     }
 
     @Override
-    protected BookCatalog createCatalog(String path, String title, int index) {
-        return new BookCatalog(title, path, index);
+    protected BookCatalogDto createCatalog(String path, String title, int index) {
+        return new BookCatalogDto(title, path, index);
     }
 
     @Override

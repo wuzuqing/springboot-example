@@ -2,9 +2,7 @@ package com.neeson.example.entity.model;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -14,6 +12,7 @@ public class BookDto {
      * 小说Id
      */
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -21,32 +20,16 @@ public class BookDto {
      */
     private String name;
 
+    /**
+     * 下载网站
+     */
+    private String channel;
 
-    public Long getId() {
-        return id;
-    }
+    /**
+     * 目录网址
+     */
+    private String catalogUrl;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
-
-    @Override
-    public String toString() {
-        return "BookModel{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }
 
 /**

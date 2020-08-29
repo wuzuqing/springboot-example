@@ -1,6 +1,7 @@
 package com.neeson.example.book;
 
 
+import com.neeson.example.entity.model.BookCatalogDto;
 import org.jsoup.nodes.Element;
 
 import java.io.File;
@@ -43,11 +44,19 @@ public abstract class AbsBookJSoupHelper extends JSoupHelper {
 
     protected void saveFile(String title, String content) {
         try {
-            if (!OSInfo.isWindows()){
-                SqlHelper.getInstance() .saveContent(content,index);
+            if (catalogDto!=null){
+                System.out.println("saveFile:"+content.length() + " "+content);
+                catalogDto.setContent(content);
+            }else{
+                SqlHelper.getInstance().saveContent(content, index);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    private BookCatalogDto catalogDto;
+    public JSoupHelper setBookCatalog(BookCatalogDto catalogDto) {
+        this.catalogDto = catalogDto;
+        return this;
     }
 }

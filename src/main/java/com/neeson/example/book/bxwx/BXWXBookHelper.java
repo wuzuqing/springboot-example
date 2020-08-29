@@ -43,4 +43,8 @@ public class BXWXBookHelper extends AbsBookJSoupHelper {
         return zhang;
     }
 
+    @Override
+    protected void saveFile(String title, String content) {
+        super.saveFile(title, content);
+    }
 }

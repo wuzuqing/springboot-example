@@ -43,8 +43,14 @@ spring:
   jpa:
     properties:
       hibernate:
+#        use-new-id-generator-mappings=false:
         hbm2ddl:
           auto: update
+        jdbc:
+          #为spring data jpa saveAll方法提供批量插入操作 此处可以随时更改大小 建议500哦
+          batch_size: 500
+          batch_versioned_data: true
+          order_inserts: true
     show-sql: true
 
 server:

@@ -13,6 +13,8 @@ import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 
 public abstract class AbsDownload {
@@ -26,7 +28,7 @@ public abstract class AbsDownload {
     private String bookName;
     private static int endCount;
     private boolean isHeBinging = false;
-    protected TreeMap<String, BookCatalog> bookCatalogs;
+    protected TreeMap<String, BookCatalogDto> bookCatalogs;
     private int max;
     private DownloadListener listener;
 
@@ -56,6 +58,12 @@ public abstract class AbsDownload {
         this.listener = listener;
         return this;
     }
+    private String channel;
+
+    public AbsDownload setChannel(String channel) {
+        this.channel = channel;
+        return this;
+    }
 
     protected Elements parseCatalogTag(Document document) {
         Element list = document.getElementById("list");
@@ -71,6 +79,7 @@ public abstract class AbsDownload {
             while (!bookCatalogs.isEmpty()) { //判断是否结束
                 helper = createHelper();
                 try {
+                    System.out.println("downloadTask:" + helper.getUrl());
                     doc = Jsoup.connect(helper.getUrl()).get();
                     if (doc != null) {
                         helper.setDocument(doc).startAnaylizeByJsoup();
@@ -84,6 +93,9 @@ public abstract class AbsDownload {
 //                heBinging();
                 if (listener != null) {
                     listener.downloadFinish();
+                }
+                if (!list.isEmpty()) {
+                    SqlHelper.getInstance().updateList( list);
                 }
             }
         }
@@ -113,7 +125,7 @@ public abstract class AbsDownload {
     public void downloadOne(BookCatalogDto catalogModel) {
 
         bookCatalogs = new TreeMap<>();
-        bookCatalogs.put(catalogModel.getPath(), createCatalog(catalogModel.getPath(), catalogModel.getTitle(), catalogModel.getCatalogIndex()));
+        bookCatalogs.put(catalogModel.getPath(), catalogModel);
         if (bookCatalogs.isEmpty()) return;
         isHeBinging = false;
         endCount = 0;
@@ -130,12 +142,13 @@ public abstract class AbsDownload {
     protected void start() {
         if (bookCatalogs.isEmpty()) return;
         isHeBinging = false;
+        list.clear();
         endCount = 0;
         startTime = System.currentTimeMillis();
         Logger.logAndCall("开始下载 : " + startTime);
         // 保存书籍
-        if (!OSInfo.isWindows()) {
-            SqlHelper.getInstance().saveCatalog(bookName, bookCatalogs);
+        if (needSaveCatalog) {
+            SqlHelper.getInstance().saveCatalog(bookName,channel, bookCatalogs);
         }
         max = bookCatalogs.size() > MAX_POOL ? MAX_POOL : bookCatalogs.size();
         for (int i = 0; i < max; i++) {
@@ -166,10 +179,31 @@ public abstract class AbsDownload {
         return false;
     }
 
+    private boolean needSaveCatalog = true;
+
     /**
      * 下载目录
      */
     private void downBookCatalog() {
+        // 检查是否有下载
+        List<BookCatalogDto> list = SqlHelper.getInstance().loadBookCatalogList(bookName,channel);
+        if (list != null) {
+            int index = 0;
+            for (BookCatalogDto catalogDto : list) {
+                boolean hasNotContent = StringUtils.isEmpty(catalogDto.getContent());
+                if (hasNotContent) {
+                    canStart = true;
+                    bookCatalogs.put(catalogDto.getPath(), catalogDto);
+                }
+                index++;
+                if (index>2){
+                    break;
+                }
+            }
+            needSaveCatalog = false;
+            return;
+        }
+
         JSoupHelper helper = new JSoupHelper() {
 
             @Override
@@ -213,19 +247,23 @@ public abstract class AbsDownload {
     }
 
 
-    protected BookCatalog createCatalog(String path, String title, int index) {
-        return new BookCatalog(title, path, index);
+    protected BookCatalogDto createCatalog(String path, String title, int index) {
+        return new BookCatalogDto(title, path, index);
     }
 
-
+    private List<BookCatalogDto> list = new ArrayList<>();
     /**
      * url 拼接格式  host - path - index - .html
      *
      * @return 解析器
      */
     private synchronized AbsBookJSoupHelper createHelper() {
-        BookCatalog bookCatalog = bookCatalogs.remove(bookCatalogs.firstKey());
-        AbsBookJSoupHelper helper = createHelper(bookFile, bookCatalog.getIndex());
+        BookCatalogDto bookCatalog = bookCatalogs.remove(bookCatalogs.firstKey());
+        AbsBookJSoupHelper helper = createHelper(bookFile, bookCatalog.getCatalogIndex());
+        helper.setBookCatalog(bookCatalog);
+        if (!needSaveCatalog){
+            list.add(bookCatalog);
+        }
         helper.setUrl(genRealUrl(bookCatalog.getPath()));
         return helper;
     }
@@ -244,50 +282,5 @@ public abstract class AbsDownload {
         return new BXWXBookHelper(bookFile, index);
     }
 
-//    private synchronized void heBinging() {  //文件合并
-//        if (isHeBinging) return;
-//        isHeBinging = true;
-//        File[] files = bookFile.listFiles();
-//        System.out.println(bookFile.getAbsolutePath());
-//        if (files == null || files.length == 0) return;
-//        File endFile = new File(bookFile, bookName + ".txt");
-//        if (endFile.exists()) { //如果文件存在则删除
-//            endFile.delete();
-//        }
-//
-//        List<File> fileList = new ArrayList<>(Arrays.asList(files));
-//        Collections.sort(fileList, new Comparator<File>() {
-//            @Override
-//            public int compare(File o1, File o2) {
-//                return o1.getName().compareTo(o2.getName());
-//            }
-//        });
-//        FileOutputStream fileOutputStream;
-//        try {
-//            endFile.createNewFile();
-//            fileOutputStream = new FileOutputStream(endFile, true);
-//            int readLen;
-//            byte[] buff = new byte[4096];
-//            for (File file : fileList) {
-//                FileInputStream stream = new FileInputStream(file);
-//                while ((readLen = stream.read(buff)) != -1) {
-//                    fileOutputStream.write(buff, 0, readLen);
-//                }
-//                stream.close();
-//                file.delete();
-//            }
-//            fileOutputStream.flush();
-//            fileOutputStream.close();
-//            fileOutputStream = null;
-//            Logger.logAndCall("下载结束 use : " + ((System.currentTimeMillis() - startTime) / 1000));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    public void printCatalog() {
-//        if (bookCatalogs != null)
-//            System.out.println("目录:" + bookCatalogs.toString());
-//    }
 
 }

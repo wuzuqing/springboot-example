@@ -1,12 +1,14 @@
 package com.neeson.example;
 
 import com.neeson.example.filter.SpringFilter;
+import com.neeson.example.repository.base.BaseRepositoryImpl;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.servlet.DispatcherType;
@@ -16,6 +18,7 @@ import javax.servlet.MultipartConfigElement;
  * @author neeson
  */
 @SpringBootApplication
+@EnableJpaRepositories(repositoryBaseClass = BaseRepositoryImpl.class)
 @EnableSwagger2
 @MapperScan("com.neeson.example.mapper")
 public class SpringbootExampleApplication {

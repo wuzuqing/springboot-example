@@ -1,17 +1,21 @@
 package com.neeson.example.entity.model;
 
-import lombok.Data;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Data
 @Table(name = "book_catalog")
 public class BookCatalogDto {
-    @Id
+
+    public BookCatalogDto() {
+    }
+
+    public BookCatalogDto(String title, String path, int index) {
+        this.title = title;
+        this.path = path;
+        this.catalogIndex = index;
+    }
+
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Long bookId;
@@ -20,6 +24,54 @@ public class BookCatalogDto {
     private String path;
     @Column( name = "book_content" ,length = 10000)
     private String content;
+    @Id
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(Long bookId) {
+        this.bookId = bookId;
+    }
+
+    public Integer getCatalogIndex() {
+        return catalogIndex;
+    }
+
+    public void setCatalogIndex(Integer catalogIndex) {
+        this.catalogIndex = catalogIndex;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 }
 
 /**

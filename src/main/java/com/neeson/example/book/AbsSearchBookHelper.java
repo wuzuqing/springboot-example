@@ -2,6 +2,7 @@ package com.neeson.example.book;
 
 
 import com.neeson.example.book.util.Logger;
+import com.neeson.example.entity.model.BookDto;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -31,6 +32,11 @@ public abstract class AbsSearchBookHelper implements Runnable {
     @Override
     public void run() {
         System.out.println(bookName);
+        BookDto bookDto = SqlHelper.getInstance().loadBook(bookName,channel);
+        if (bookDto != null && bookDto.getCatalogUrl() != null) {
+            callResult(bookDto.getCatalogUrl());
+            return;
+        }
         JSoupHelper helper = new JSoupHelper() {
 
             @Override
@@ -47,7 +53,6 @@ public abstract class AbsSearchBookHelper implements Runnable {
 
         try {
             String url = searchUrl(bookName);
-            Logger.d("url= " + url);
             helper.setDocument(genDocument(url)).startAnaylizeByJsoup();
         } catch (Exception e) {
             e.printStackTrace();
@@ -119,10 +124,13 @@ public abstract class AbsSearchBookHelper implements Runnable {
         }
         if (autoDownload) {
             Logger.logAndCall(result);
-            createDownload(result, bookName).startDownload();
+            createDownload(result, bookName).setChannel(channel).startDownload();
         }
     }
 
     protected abstract AbsDownload createDownload(String result, String bookName);
-
+    private String channel;
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
 }

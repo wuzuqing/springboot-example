@@ -52,6 +52,7 @@ public class SearchBookUtil {
             default:
                 break;
         }
+        searchBookHelper.setChannel(type);
         searchBookHelper.run();
     }
 }

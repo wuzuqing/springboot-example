@@ -4,7 +4,7 @@ package com.neeson.example.book.jawx;
 import com.neeson.example.book.AbsBookJSoupHelper;
 import com.neeson.example.book.AbsDownload;
 import com.neeson.example.book.AbsSearchBookHelper;
-import com.neeson.example.book.BookCatalog;
+import com.neeson.example.entity.model.BookCatalogDto;
 
 import java.io.File;
 
@@ -31,8 +31,8 @@ public class JiuAiWenXue extends AbsDownload {
     }
 
     @Override
-    protected BookCatalog createCatalog(String path, String title, int index) {
-        return new BookCatalog(title, bookPath+ path, index);
+    protected BookCatalogDto createCatalog(String path, String title, int index) {
+        return new BookCatalogDto(title, bookPath+ path, index);
     }
 
     public static void main(String[] args) {
