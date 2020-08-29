@@ -45,7 +45,6 @@ public abstract class AbsBookJSoupHelper extends JSoupHelper {
     protected void saveFile(String title, String content) {
         try {
             if (catalogDto!=null){
-                System.out.println("saveFile:"+content.length() + " "+content);
                 catalogDto.setContent(content);
             }else{
                 SqlHelper.getInstance().saveContent(content, index);

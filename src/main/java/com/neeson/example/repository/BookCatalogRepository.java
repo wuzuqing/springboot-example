@@ -13,4 +13,6 @@ public interface BookCatalogRepository extends BaseRepository<BookCatalogDto, Lo
     BookCatalogDto findFirstByOrderByIdDesc();
 
     List<BookCatalogDto> findByBookId(Long bookId);
+
+    List<BookCatalogDto> findByBookIdAndContentIsNull(Long bookId);
 }

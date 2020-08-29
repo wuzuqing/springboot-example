@@ -22,7 +22,9 @@ public class BookCatalogDto {
     private Integer catalogIndex;
     private String title;
     private String path;
-    @Column( name = "book_content" ,length = 10000)
+
+    @Lob
+    @Column(columnDefinition="TEXT",name = "book_content")
     private String content;
     @Id
     public Long getId() {

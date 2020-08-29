@@ -32,7 +32,7 @@ public class BookServiceImpl implements IBookService {
     public List<BookCatalogDto> loadBookCatalogList(String bookName, String channel) {
         BookDto bookDto = loadBook(bookName, channel);
         if (bookDto != null) {
-            return bookCatalogRepository.findByBookId(bookDto.getId());
+            return bookCatalogRepository.findByBookIdAndContentIsNull(bookDto.getId());
         }
         return null;
     }

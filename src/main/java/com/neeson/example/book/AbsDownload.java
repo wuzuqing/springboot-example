@@ -97,6 +97,7 @@ public abstract class AbsDownload {
                 if (!list.isEmpty()) {
                     SqlHelper.getInstance().updateList( list);
                 }
+                System.out.println("downloadUsed:"+(System.currentTimeMillis()-startTime));
             }
         }
     };
@@ -186,6 +187,7 @@ public abstract class AbsDownload {
      */
     private void downBookCatalog() {
         // 检查是否有下载
+        long start = System.currentTimeMillis();
         List<BookCatalogDto> list = SqlHelper.getInstance().loadBookCatalogList(bookName,channel);
         if (list != null) {
             int index = 0;
@@ -195,11 +197,8 @@ public abstract class AbsDownload {
                     canStart = true;
                     bookCatalogs.put(catalogDto.getPath(), catalogDto);
                 }
-                index++;
-                if (index>2){
-                    break;
-                }
             }
+            System.out.println("loadBookCatalogList: size:" +bookCatalogs.size() + " used:" +(System.currentTimeMillis()-start));
             needSaveCatalog = false;
             return;
         }
